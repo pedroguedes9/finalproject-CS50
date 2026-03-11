@@ -3,7 +3,30 @@
 {% block main %}
     <h1>Hello World</h1>
     <form action="/" method="post">
-        <input  >
-        <button></button>
+        <input name="username" type="text" autocomplete="username" placeholder="username" style="display: block;"  >
+        <input name="email" type="email" autocomplete="email" placeholder="email" style="display: block;">
+        <input name="password" type="password" autocomplete="new-password" placeholder="password" style="display: block;">
+        <input name="telefone" type="tel" autocomplete="tel-national" placeholder="telefone" style="display: block;">
+        <button>Adicionar usuário</button>
     </form>
+    <ul>
+    {% for user in users %}
+        <li>
+            {{ user.id }} - {{user.username}} - {{user.email}} - {{ user.password }} {{ user.telefone }}
+            <form style="display: inline;" action="/delete" method="post">
+                <input type="hidden" name="id" value="{{ user.id }}">
+                <button type="submit">Deletar</button>
+            </form>
+            -
+            <form style="display: inline;" action="/change" method="post">
+                <label>
+                    Mudar nome:<input type="text" name="new_name">
+                </label>
+                <input type="hidden" name="id" value="{{ user.id }}">
+                <button type="submit">Mudar</button>
+            </form>
+        </li>
+    {% endfor %}
+    </ul>
+
 {% endblock %}

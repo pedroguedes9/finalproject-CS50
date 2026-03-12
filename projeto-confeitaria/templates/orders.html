@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block main %}
+    <h1>Orders</h1>
+    <form action="{{url_for('orders')}}" method="post">
+        <label>
+            Seu id: <input type="number" placeholder="id" name="user-id">
+        </label>
+        <button type="submit" >Buscar pedidos</button>
+    </form>
+    {% if orders %}
+        {% for order in orders %}
+            <h3>Order: {{loop.index}}</h3>
+            <table>
+                <thead>
+                    <th>Product Name</th>
+                    <th>Price</th>
+                    <th>Description</th>
+                    <th>Category-id</th>
+                    <th>Image</th>
+                    <th>Quantity</th>
+                </thead>
+                <tbody>
+                    {% for order_item in order.items %}
+                        <tr>
+                            <td style="border: 1px solid black;">{{order_item.product.name}}</td>
+                            <td style="border: 1px solid black;">{{order_item.price}}</td>
+                            <td style="border: 1px solid black;">{{order_item.product.description}}</td>
+                            <td style="border: 1px solid black;">{{order_item.product.category.name}}</td>
+                            <td style="border: 1px solid black;">{{order_item.product.image}}</td>
+                            <td style="border: 1px solid black;">{{order_item.quantity}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <p>Total do pedido: {{order.total_price}}</p>
+        {% endfor %}
+    {% endif %}
+{% endblock %}

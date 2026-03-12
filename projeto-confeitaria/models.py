@@ -36,12 +36,13 @@ class Products(db.Model):
 
     order_items = db.relationship("OrderItems", backref="product")
 
-    def __init__(self, name:str, price:float, description:str | None, category_id:int | None, stock:int, image:str | None ):
+    def __init__(self, name:str, price:float, description:str | None, category_id:int | None, stock:int, image:str | None, is_active:int ):
         self.name = name
         self.price = price
         self.description = description
         self.category_id = category_id
         self.stock = stock
+        self.is_active = is_active
         self.image = image
 
 class Categories(db.Model):
@@ -65,10 +66,15 @@ class CartItems(db.Model):
     quantity = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime, default=func.now())
 
+    product = db.relationship("Products", backref="cart_items")
+
     def __init__(self,user_id:int, product_id:int, quantity:int):
         self.user_id = user_id
         self.product_id = product_id
         self.quantity = quantity
+
+    def __repr__(self):
+        return f"<CartItems user_id={self.user_id} product_id={self.product_id} quantity={self.quantity}>"
 
 
 class Orders(db.Model):

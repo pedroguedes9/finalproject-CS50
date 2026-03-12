@@ -1,12 +1,12 @@
 {% extends "layout.html" %}
 {% block title %} hello {% endblock %}
 {% block main %}
-    <h1>Hello World</h1>
+    <h1 class="">Hello World</h1>
     <form action="/" method="post">
-        <input name="username" type="text" autocomplete="username" placeholder="username" style="display: block;"  >
-        <input name="email" type="email" autocomplete="email" placeholder="email" style="display: block;">
-        <input name="password" type="password" autocomplete="new-password" placeholder="password" style="display: block;">
-        <input name="telefone" type="tel" autocomplete="tel-national" placeholder="telefone" style="display: block;">
+        <input name="username" type="text" autocomplete="username" placeholder="username" class="block"  >
+        <input name="email" type="email" autocomplete="email" placeholder="email" class="block">
+        <input name="password" type="password" autocomplete="new-password" placeholder="password" class="block">
+        <input name="telefone" type="tel" autocomplete="tel-national" placeholder="telefone" class="block">
         <button>Adicionar usuário</button>
     </form>
     <ul>
@@ -28,5 +28,6 @@
         </li>
     {% endfor %}
     </ul>
+    <a href="{{ url_for('products') }}">Produtos</a>
 
 {% endblock %}

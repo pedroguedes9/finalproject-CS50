@@ -1,11 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{%block title%} {%endblock%}</title>
+    <script src=""></script>
 </head>
 <body>
+    <header style="width: 100%;">
+        <nav>
+            <ul style="display: flex; flex-direction: row; gap: 50px;">
+                <li><a href="{{ url_for('index')}}">Home</a></li>
+                <li><a href="{{ url_for('products')}}">Products</a></li>
+                <li><a href="{{ url_for('cart')}}">Carrinho</a></li>
+                <li><a href="{{ url_for('orders')}}">Orders</a></li>
+            </ul>
+        </nav>
+    </header>
     {%block main%} {%endblock%}
 </body>
 </html>

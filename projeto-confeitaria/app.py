@@ -4,15 +4,26 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 from dotenv import load_dotenv
 from db import db
 from models import Users, Products, CartItems, OrderItems, Orders, Categories
+import hashlib
+from blueprints.carrinho.carrinho import carrinho_bp
+from blueprints.produtos.produtos import produtos_bp
+from blueprints.compras.compras import compras_bp
 
 load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = 'SECRET_KEY'
+app.register_blueprint(produtos_bp, url_prefix="/produtos")
+app.register_blueprint(carrinho_bp, url_prefix="/carrinho")
+app.register_blueprint(compras_bp, url_prefix="/compras")
 lm = LoginManager(app)
 lm.login_view = 'index'
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///confeitaria.db"
 db.init_app(app)
+
+def hash(txt):
+    hash_obj = hashlib.sha256(txt.encode('utf-8'))
+    return hash_obj.hexdigest()
 
 @lm.user_loader
 def user_loader(id):
@@ -27,7 +38,7 @@ def index():
         password = request.form.get("password")
         telefone = request.form.get("telefone")
 
-        new_user = Users(username=username, email=email, password=password, telefone_number=telefone)
+        new_user = Users(username=username, email=email, password=hash(password), telefone_number=telefone)
         db.session.add(new_user)
         db.session.commit()
 
@@ -44,7 +55,7 @@ def login():
         username = request.form.get("username")
         password = request.form.get("password")
         
-        user = db.session.query(Users).filter_by(username=username, password=password).first()
+        user = db.session.query(Users).filter_by(username=username, password=hash(password)).first()
         if not user:
             return "Nome ou senha incorretos"
 
@@ -79,105 +90,7 @@ def change():
         db.session.commit()
         return redirect("/")
 
-@app.route("/products", methods = ["GET", "POST"])
-@login_required
-def products():
-    if request.method == "POST":
-        name = request.form.get("name")
-        price = request.form.get("price")
-        description = request.form.get("description")
-        category_id = request.form.get("category-id")
-        stock = request.form.get("stock")
-        is_active = request.form.get("is-active")
-        image = request.form.get("image")
-        new_product = Products(name=name, price=price, description=description, category_id=category_id, stock=stock, is_active=is_active, image=image)
-        db.session.add(new_product)
-        db.session.commit()
-        return redirect(url_for("products"))
-    else:
-        products = db.session.query(Products).all()
-        categories = db.session.query(Categories).all()
-        return render_template("products.html", products=products, categories=categories)
 
-@app.route("/del-product", methods = ["POST"])
-def del_product():
-    if request.method == "POST":
-        id = request.form.get("id")
-        id = int(id)
-        product = db.session.query(Products).filter_by(id=id).first()
-        db.session.delete(product)
-        db.session.commit()
-        return redirect(url_for('products'))
-
-@app.route("/add-category", methods = ["POST"])
-def add_category():
-    if request.method == "POST":
-        name = request.form.get("name")
-        new_category = Categories(name=name)
-        db.session.add(new_category)
-        db.session.commit()
-        return redirect(url_for('products'))
-
-@app.route("/add-to-cart", methods=["POST"])
-def add_to_cart():
-    if request.method == "POST":
-        product_id = request.form.get("id")
-        user_id = current_user.id
-        quantity = 1
-        new_cart_item = CartItems(user_id=user_id, product_id=product_id, quantity=quantity)
-        db.session.add(new_cart_item)
-        db.session.commit()
-        return redirect(url_for("products"))
-
-@app.route("/cart", methods=["GET"])
-def cart():
-    user_id = current_user.id
-    cart_items = db.session.query(CartItems).filter_by(user_id = user_id).all()
-    total_price = sum(int(item.product.price) * int(item.quantity) for item in cart_items)
-    return render_template("cart.html", cart_items = cart_items, user_id=user_id, total_price=total_price)
-
-
-@app.route("/del-from-cart", methods=["POST"])
-def del_from_cart():
-    if request.method == "POST":
-        item_id = request.form.get("id")
-        item_id = int(item_id)
-        item = db.session.query(CartItems).filter_by(id=item_id).first()
-        db.session.delete(item)
-        db.session.commit()
-
-        user_id = current_user.id
-        cart_items = db.session.query(CartItems).filter_by(user_id = user_id).all()
-        return render_template("cart.html", cart_items = cart_items, user_id=id)
-
-@app.route("/buy", methods=["POST"])
-def buy():
-    if request.method == "POST":
-        user_id = current_user.id
-        user_cart = db.session.query(CartItems).filter_by(user_id=user_id)
-
-        total_price = sum(int(item.product.price) * int(item.quantity) for item in user_cart)
-        new_order = Orders(user_id=user_id, status="pendente", total_price=total_price)
-        db.session.add(new_order)
-        db.session.commit()
-
-        for item in user_cart:
-            new_ordered_item = OrderItems(
-                order_id=new_order.id,
-                product_id=item.product_id,
-                price=int(item.product.price),
-                quantity=item.quantity
-            )
-            db.session.add(new_ordered_item)
-            db.session.delete(item)
-        db.session.commit()
-        return redirect(url_for("cart"))
-
-@app.route("/orders", methods=[ "GET"])
-def orders():
-    user_id = current_user.id
-    orders = db.session.query(Orders).filter_by(user_id=user_id).all()
-    return render_template("orders.html", user_id=user_id, orders=orders)
 
 with app.app_context():
     db.create_all()

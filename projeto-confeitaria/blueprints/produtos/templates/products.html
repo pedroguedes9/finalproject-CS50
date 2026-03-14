@@ -2,7 +2,7 @@
 {% block main %}
     <h1>Products</h1>
     <h2>Add product</h2>
-    <form action="{{ url_for('products') }}" method="post" >
+    <form action="{{ url_for('produtos.products') }}" method="post" >
         <input type="text" name="name" placeholder="name">
         <input type="number" name="price" placeholder="price">
         <input type="text" name="description" placeholder="description">
@@ -33,13 +33,13 @@
                 <td style="border: 1px solid black;">{{product.is_active}}</td>
                 <td style="border: 1px solid black;">{{product.image}}</td>
                 <td>
-                    <form action="{{url_for('add_to_cart')}}" method="post">
+                    <form action="{{url_for('carrinho.add_to_cart')}}" method="post">
                         <input type="hidden" value="{{product.id}}" name="id">
                         <button type="submit">Add to cart</button>
                     </form>
                 </td>
                 <td>
-                    <form action="{{url_for('del_product')}}" method="post">
+                    <form action="{{url_for('produtos.del_product')}}" method="post">
                         <input type="hidden" value="{{product.id}}" name="id">
                         <button type="submit">Deletar</button>
                     </form>
@@ -48,9 +48,9 @@
             {% endfor %}
         </tbody>
     </table>
-    <a href="{{ url_for('cart') }}">Carrinho</a>
+    <a href="{{ url_for('carrinho.cart') }}">Carrinho</a>
     <h2>Add category</h2>
-    <form action="{{url_for('add_category')}}" method="post">
+    <form action="{{url_for('produtos.add_category')}}" method="post">
         <input type="text" name="name" placeholder="nome da categoria">
         <button type="submit">Adicionar categoria</button>
     </form>

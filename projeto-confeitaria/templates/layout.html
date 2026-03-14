@@ -11,9 +11,9 @@
         <nav>
             <ul style="display: flex; flex-direction: row; gap: 50px;">
                 <li><a href="{{ url_for('index')}}">Home</a></li>
-                <li><a href="{{ url_for('products')}}">Products</a></li>
-                <li><a href="{{ url_for('cart')}}">Carrinho</a></li>
-                <li><a href="{{ url_for('orders')}}">Orders</a></li>
+                <li><a href="{{ url_for('produtos.products')}}">Products</a></li>
+                <li><a href="{{ url_for('carrinho.cart')}}">Carrinho</a></li>
+                <li><a href="{{ url_for('compras.orders')}}">Orders</a></li>
                 <li><a href="{{ url_for('login')}}">Login</a></li>
                 <a href="/logout">Logout</a>
             </ul>

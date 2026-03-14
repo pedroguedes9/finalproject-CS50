@@ -22,7 +22,7 @@
                     <td style="border: 1px solid black;">{{item.product.is_active}}</td>
                     <td style="border: 1px solid black;">{{item.product.image}}</td>
                     <td style="border: 1px solid black;">
-                        <form action="{{url_for('del_from_cart')}}" method="post">
+                        <form action="{{url_for('carrinho.del_from_cart')}}" method="post">
                             <input type="hidden" name="id" value="{{item.id}}">
                             <input type="hidden" name="user-id" value="{{user_id}}">
                             <button type="submit">Delete from cart</button>
@@ -33,7 +33,7 @@
         </tbody>
     </table>
     <p>Total price: {{total_price}}</p>
-    <form action="{{url_for('buy')}}" method="post">
+    <form action="{{url_for('compras.buy')}}" method="post">
         <input type="hidden" name="user-id" value="{{user_id}}">
         <button type="submit">Buy</button>
     </form>

@@ -12,7 +12,7 @@
     <ul>
     {% for user in users %}
         <li>
-            {{ user.id }} - {{user.username}} - {{user.email}} - {{ user.password }} {{ user.telefone }}
+            {{ user.id }} - {{user.username}} - {{user.email}} - {{ user.password }} {{ user.telefone_number }}
             <form style="display: inline;" action="/delete" method="post">
                 <input type="hidden" name="id" value="{{ user.id }}">
                 <button type="submit">Deletar</button>
@@ -28,6 +28,11 @@
         </li>
     {% endfor %}
     </ul>
-    <a href="{{ url_for('products') }}">Produtos</a>
+    {% if current_user.is_authenticated %}
+        <h1>Você está logado! Olá {{current_user.username}}</h1>
+    {% else %}
+        <h1>VocÊ não está logado!</h1>
+    {%endif%}
+    <a href="{{ url_for('produtos.products') }}">Produtos</a>
 
 {% endblock %}

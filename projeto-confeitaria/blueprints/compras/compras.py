@@ -11,7 +11,7 @@ def buy():
         user_id = current_user.id
         user_cart = db.session.query(CartItems).filter_by(user_id=user_id)
 
-        total_price = sum(int(item.product.price) * int(item.quantity) for item in user_cart)
+        total_price = sum(float(item.product.price) * int(item.quantity) for item in user_cart)
         new_order = Orders(user_id=user_id, status="pendente", total_price=total_price)
         db.session.add(new_order)
         db.session.commit()

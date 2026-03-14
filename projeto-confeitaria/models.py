@@ -1,20 +1,21 @@
 from db import db
+from flask_login import UserMixin
 from sqlalchemy import func
 
-class Users(db.Model):
+class Users(UserMixin, db.Model):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(30), nullable=False, unique=True )
     email = db.Column(db.String(100), nullable=False, unique=True)
-    password = db.Column(db.String(255), nullable=False) #255 para senha pois usa um hash
-    telefone_number = db.Column(db.Integer, nullable=False)
+    password = db.Column(db.String, nullable=False) #255 para senha pois usa um hash
+    telefone_number = db.Column(db.String(15), nullable=False)
     created_at = db.Column(db.DateTime, default=func.now())
 
     cart_items = db.relationship("CartItems", backref="user")
     orders = db.relationship("Orders", backref="user")
 
-    def __init__(self, username:str, email:str, password:str, telefone_number:int):
+    def __init__(self, username:str, email:str, password:str, telefone_number:str):
         self.username = username
         self.email = email
         self.password = password

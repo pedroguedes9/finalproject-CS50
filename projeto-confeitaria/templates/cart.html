@@ -1,49 +1,41 @@
 {% extends "layout.html" %}
 {% block main %}
     <h1>Carrinho</h1>
-    <form action="{{ url_for('cart') }}" method="post">
-        <label>
-            Seu id: <input type="number" placeholder="id" name="id">
-        </label>
-        <button type="submit" >Buscar carrinho</button>
+    <table>
+        <thead>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Description</th>
+            <th>Category-id</th>
+            <th>Stock</th>
+            <th>Is-Active</th>
+            <th>Image</th>
+        </thead>
+        <tbody>
+            {% for item in cart_items %}
+                <tr style="border: 1px solid black;">
+                    <td style="border: 1px solid black;">{{item.product.name}}</td>
+                    <td style="border: 1px solid black;">{{item.product.price}}</td>
+                    <td style="border: 1px solid black;">{{item.product.description}}</td>
+                    <td style="border: 1px solid black;">{{item.product.category.name}}</td>
+                    <td style="border: 1px solid black;">{{item.product.stock}}</td>
+                    <td style="border: 1px solid black;">{{item.product.is_active}}</td>
+                    <td style="border: 1px solid black;">{{item.product.image}}</td>
+                    <td style="border: 1px solid black;">
+                        <form action="{{url_for('del_from_cart')}}" method="post">
+                            <input type="hidden" name="id" value="{{item.id}}">
+                            <input type="hidden" name="user-id" value="{{user_id}}">
+                            <button type="submit">Delete from cart</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p>Total price: {{total_price}}</p>
+    <form action="{{url_for('buy')}}" method="post">
+        <input type="hidden" name="user-id" value="{{user_id}}">
+        <button type="submit">Buy</button>
     </form>
-    {% if cart_items != None %}
-        <table>
-            <thead>
-                <th>Name</th>
-                <th>Price</th>
-                <th>Description</th>
-                <th>Category-id</th>
-                <th>Stock</th>
-                <th>Is-Active</th>
-                <th>Image</th>
-            </thead>
-            <tbody>
-                {% for item in cart_items %}
-                    <tr style="border: 1px solid black;">
-                        <td style="border: 1px solid black;">{{item.product.name}}</td>
-                        <td style="border: 1px solid black;">{{item.product.price}}</td>
-                        <td style="border: 1px solid black;">{{item.product.description}}</td>
-                        <td style="border: 1px solid black;">{{item.product.category.name}}</td>
-                        <td style="border: 1px solid black;">{{item.product.stock}}</td>
-                        <td style="border: 1px solid black;">{{item.product.is_active}}</td>
-                        <td style="border: 1px solid black;">{{item.product.image}}</td>
-                        <td style="border: 1px solid black;">
-                            <form action="{{url_for('del_from_cart')}}" method="post">
-                                <input type="hidden" name="id" value="{{item.id}}">
-                                <input type="hidden" name="user-id" value="{{user_id}}">
-                                <button type="submit">Delete from cart</button>
-                            </form>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <p>Total price: {{total_price}}</p>
-        <form action="{{url_for('buy')}}" method="post">
-            <input type="hidden" name="user-id" value="{{user_id}}">
-            <button type="submit">Buy</button>
-        </form>
-    {% endif %}
     
 {% endblock %}

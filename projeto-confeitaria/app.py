@@ -30,24 +30,7 @@ def user_loader(id):
     user = db.session.query(Users).filter_by(id=id).first()
     return user
 
-@app.route("/",methods = ["GET", "POST"])
-def index():
-    if request.method == "POST":
-        username = request.form.get("username")
-        email = request.form.get("email")
-        password = request.form.get("password")
-        telefone = request.form.get("telefone")
 
-        new_user = Users(username=username, email=email, password=hash(password), telefone_number=telefone)
-        db.session.add(new_user)
-        db.session.commit()
-
-        login_user(new_user)
-
-        return redirect("/")
-    else:
-        users = db.session.query(Users).all()
-        return render_template("index.html", users=users)
 
 @app.route("/login", methods=["POST", "GET"])
 def login():

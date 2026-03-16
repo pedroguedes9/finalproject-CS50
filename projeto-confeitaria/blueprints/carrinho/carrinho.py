@@ -22,7 +22,7 @@ def add_to_cart():
 def cart():
     user_id = current_user.id
     cart_items = db.session.query(CartItems).filter_by(user_id = user_id).all()
-    total_price = sum(int(item.product.price) * int(item.quantity) for item in cart_items)
+    total_price = sum(float(item.product.price) * int(item.quantity) for item in cart_items)
     return render_template("cart.html", cart_items = cart_items, user_id=user_id, total_price=total_price)
 
 

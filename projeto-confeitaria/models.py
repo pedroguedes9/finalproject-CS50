@@ -9,17 +9,17 @@ class Users(UserMixin, db.Model):
     username = db.Column(db.String(30), nullable=False, unique=True )
     email = db.Column(db.String(100), nullable=False, unique=True)
     password = db.Column(db.String, nullable=False) #255 para senha pois usa um hash
-    telefone_number = db.Column(db.String(15), nullable=False)
+    phone_number = db.Column(db.String(15), nullable=False)
     created_at = db.Column(db.DateTime, default=func.now())
 
     cart_items = db.relationship("CartItems", backref="user")
     orders = db.relationship("Orders", backref="user")
 
-    def __init__(self, username:str, email:str, password:str, telefone_number:str):
+    def __init__(self, username:str, email:str, password:str, phone_number:str):
         self.username = username
         self.email = email
         self.password = password
-        self.telefone_number = telefone_number
+        self.phone_number = phone_number
 
 
 class Products(db.Model):

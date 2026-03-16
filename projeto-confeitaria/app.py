@@ -1,79 +1,42 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for
-from flask_login import LoginManager, login_user, login_required, logout_user, current_user
-from dotenv import load_dotenv
+from flask import Flask, render_template
+from flask_login import LoginManager
 from db import db
-from models import Users, Products, CartItems, OrderItems, Orders, Categories
-import hashlib
-from blueprints.carrinho.carrinho import carrinho_bp
-from blueprints.produtos.produtos import produtos_bp
-from blueprints.compras.compras import compras_bp
+from models import Users
+from blueprints.cart.cart import cart_bp
+from blueprints.products.products import products_bp
+from blueprints.orders.orders import orders_bp
+from blueprints.auth.auth import auth_bp
+from dotenv import load_dotenv
+
 
 load_dotenv()
 
+
 app = Flask(__name__)
-app.secret_key = 'SECRET_KEY'
-app.register_blueprint(produtos_bp, url_prefix="/produtos")
-app.register_blueprint(carrinho_bp, url_prefix="/carrinho")
-app.register_blueprint(compras_bp, url_prefix="/compras")
-lm = LoginManager(app)
-lm.login_view = 'index'
+app.secret_key = os.getenv('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///confeitaria.db"
+
 db.init_app(app)
 
-def hash(txt):
-    hash_obj = hashlib.sha256(txt.encode('utf-8'))
-    return hash_obj.hexdigest()
+login_manager = LoginManager(app)
+login_manager.login_view = 'auth.login'
 
-@lm.user_loader
-def user_loader(id):
-    user = db.session.query(Users).filter_by(id=id).first()
+app.register_blueprint(products_bp, url_prefix="/products")
+app.register_blueprint(cart_bp, url_prefix="/cart")
+app.register_blueprint(orders_bp, url_prefix="/orders")
+app.register_blueprint(auth_bp, url_prefix="/auth")
+
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    user = db.session.query(Users).filter_by(id=user_id).first()
     return user
 
-
-
-@app.route("/login", methods=["POST", "GET"])
-def login():
-    if request.method == "POST":
-        username = request.form.get("username")
-        password = request.form.get("password")
-        
-        user = db.session.query(Users).filter_by(username=username, password=hash(password)).first()
-        if not user:
-            return "Nome ou senha incorretos"
-
-        login_user(user)
-        
-        return redirect("/")
-    else:
-        return render_template("login.html")
-    
-@app.route("/logout", methods = ["GET"])
-@login_required
-def logout():
-    logout_user()
-    return redirect("/")
-
-@app.route("/delete", methods = ["POST"])
-def delete():
-    if request.method == "POST":
-        id = request.form.get("id")
-        user = db.session.query(Users).filter_by(id=id).first()
-        db.session.delete(user)
-        db.session.commit()
-        return redirect("/")
-
-@app.route("/change", methods = ["POST"])
-def change():
-    if request.method == "POST":
-        id = request.form.get("id")
-        new_name = request.form.get("new_name")
-        user = db.session.query(Users).filter_by(id=id).first()
-        user.username = new_name
-        db.session.commit()
-        return redirect("/")
-
-
+@app.route("/",methods=["GET"])
+def index():
+    return render_template("index.html")
 
 with app.app_context():
     db.create_all()

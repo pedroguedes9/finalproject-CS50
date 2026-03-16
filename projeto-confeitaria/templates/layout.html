@@ -10,12 +10,13 @@
     <header style="width: 100%;">
         <nav>
             <ul style="display: flex; flex-direction: row; gap: 50px;">
-                <li><a href="{{ url_for('index')}}">Home</a></li>
-                <li><a href="{{ url_for('produtos.products')}}">Products</a></li>
-                <li><a href="{{ url_for('carrinho.cart')}}">Carrinho</a></li>
-                <li><a href="{{ url_for('compras.orders')}}">Orders</a></li>
-                <li><a href="{{ url_for('login')}}">Login</a></li>
-                <a href="/logout">Logout</a>
+                <li><a href="{{ url_for('index')}}">Inicio</a></li>
+                <li><a href="{{ url_for('products.products')}}">Produtos</a></li>
+                <li><a href="{{ url_for('cart.cart')}}">Carrinho</a></li>
+                <li><a href="{{ url_for('orders.orders')}}">Pedidos</a></li>
+                <li><a href="{{ url_for('auth.login')}}">Entrar</a></li>
+                <li><a href="{{ url_for('auth.register')}}">Registrar</a></li>
+                <a href="{{ url_for('auth.logout')}}">Sair</a>
             </ul>
         </nav>
     </header>

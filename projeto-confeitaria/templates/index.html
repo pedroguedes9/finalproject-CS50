@@ -1,38 +1,4 @@
 {% extends "layout.html" %}
-{% block title %} hello {% endblock %}
 {% block main %}
-    <h1 class="">Hello World</h1>
-    <form action="/" method="post">
-        <input name="username" type="text" autocomplete="username" placeholder="username" class="block"  >
-        <input name="email" type="email" autocomplete="email" placeholder="email" class="block">
-        <input name="password" type="password" autocomplete="new-password" placeholder="password" class="block">
-        <input name="telefone" type="tel" autocomplete="tel-national" placeholder="telefone" class="block">
-        <button>Adicionar usuário</button>
-    </form>
-    <ul>
-    {% for user in users %}
-        <li>
-            {{ user.id }} - {{user.username}} - {{user.email}} - {{ user.password }} {{ user.telefone_number }}
-            <form style="display: inline;" action="/delete" method="post">
-                <input type="hidden" name="id" value="{{ user.id }}">
-                <button type="submit">Deletar</button>
-            </form>
-            -
-            <form style="display: inline;" action="/change" method="post">
-                <label>
-                    Mudar nome:<input type="text" name="new_name">
-                </label>
-                <input type="hidden" name="id" value="{{ user.id }}">
-                <button type="submit">Mudar</button>
-            </form>
-        </li>
-    {% endfor %}
-    </ul>
-    {% if current_user.is_authenticated %}
-        <h1>Você está logado! Olá {{current_user.username}}</h1>
-    {% else %}
-        <h1>VocÊ não está logado!</h1>
-    {%endif%}
-    <a href="{{ url_for('produtos.products') }}">Produtos</a>
-
+    <h1>Home</h1>
 {% endblock %}

@@ -1,17 +1,17 @@
 {% extends "layout.html" %}
 {% block main %}
-    <h1>Orders</h1>
+    <h1>Pedidos</h1>
     
     {% for order in orders %}
-        <h3>Order: {{loop.index}}</h3>
+        <h3>Pedido: {{loop.index}}</h3>
         <table>
             <thead>
-                <th>Product Name</th>
-                <th>Price</th>
-                <th>Description</th>
-                <th>Category-id</th>
-                <th>Image</th>
-                <th>Quantity</th>
+                <th>Nome do produto</th>
+                <th>Preco</th>
+                <th>Descricao</th>
+                <th>Categoria</th>
+                <th>Imagem</th>
+                <th>Quantidade</th>
             </thead>
             <tbody>
                 {% for order_item in order.items %}

@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, redirect, url_for
+from flask import Blueprint, request, render_template, redirect, url_for, flash
 from db import db
 from flask_login import current_user, login_required
 from models import  CartItems
@@ -9,8 +9,31 @@ cart_bp = Blueprint("cart", __name__, template_folder="templates")
 @login_required
 def add_to_cart():
     product_id = request.form.get("id")
+    quantity = request.form.get("quantity")
+    if not product_id:
+        flash("Por favor, adicione um produto que esteja disponível.", "error")
+        return redirect(url_for('products.products'))
+    if not quantity:
+        flash("Por favor, insira uma quantidade", "error")
+        return redirect(url_for('products.products'))
+    
+    try:
+        product_id = int(product_id)
+    except ValueError:
+        flash("Por favor, o id do produto deve ser um número válido", "error")
+        return redirect(url_for('products.products'))
+
+    try:
+        quantity = int(quantity)
+    except ValueError:
+        flash("Por favor, a quantidade deve ser um número", "error")
+        return redirect(url_for('products.products'))
+    if quantity < 0:
+        flash("Por favor, a quantidade deve ser um numero positivo", "error")
+        return redirect(url_for('products.products'))
+
+
     user_id = current_user.id
-    quantity = 1
     new_cart_item = CartItems(user_id=user_id, product_id=product_id, quantity=quantity)
     db.session.add(new_cart_item)
     db.session.commit()

@@ -9,6 +9,7 @@
         <input name="phone" type="tel" autocomplete="tel-national" placeholder="telefone" class="block">
         <button>Cadastrar usuario</button>
     </form>
+    
     {% if current_user.is_authenticated %}
         <h1>Voce esta logado! Ola {{current_user.username}}</h1>
     {% else %}

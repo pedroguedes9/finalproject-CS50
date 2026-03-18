@@ -15,7 +15,7 @@ def products():
         description = request.form.get("description")
         category_id = request.form.get("category-id")
         stock = request.form.get("stock")
-        is_active = request.form.get("is-active")
+        is_active = "is-active" in request.form
         image = request.form.get("image")
         new_product = Products(name=name, price=price, description=description, category_id=category_id, stock=stock, is_active=is_active, image=image)
         db.session.add(new_product)

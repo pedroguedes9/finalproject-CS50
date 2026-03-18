@@ -10,6 +10,7 @@ class Users(UserMixin, db.Model):
     email = db.Column(db.String(100), nullable=False, unique=True)
     password = db.Column(db.String, nullable=False) #255 para senha pois usa um hash
     phone_number = db.Column(db.String(15), nullable=False)
+    is_admin = db.Column(db.Boolean, nullable=False, default=False)
     created_at = db.Column(db.DateTime, default=func.now())
 
     cart_items = db.relationship("CartItems", backref="user")
@@ -31,7 +32,7 @@ class Products(db.Model):
     description = db.Column(db.String, nullable=True)
     category_id = db.Column(db.Integer, db.ForeignKey("categories.id"), nullable=True)
     stock = db.Column(db.Integer, nullable=True)
-    is_active = db.Column(db.Integer, nullable=False, default=1)
+    is_active = db.Column(db.Boolean, nullable=False, default=1)
     image = db.Column(db.String, nullable=True)
     created_at = db.Column(db.DateTime, default=func.now())
 

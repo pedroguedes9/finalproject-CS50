@@ -1,15 +1,4 @@
 {% extends "layout.html" %}
 {% block main %}
     <h1>Home</h1>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <section style="margin: 12px 0;">
-                {% for category, message in messages %}
-                    <div class="flash {{ category }}" style="padding: 10px; border: 1px solid #ccc; margin-bottom: 8px;">
-                        {{message}}
-                    </div>
-                {% endfor %}
-            </section>
-        {% endif %}
-    {% endwith %}
 {% endblock %}

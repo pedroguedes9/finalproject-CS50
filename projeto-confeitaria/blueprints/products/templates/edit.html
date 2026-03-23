@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+{% block main %}
+    <form action="{{url_for('products.edit_product')}}" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <p>ID: {{product.id}}</p>
+        <label for="name">
+            <span>Nome: {{product.name}}</span> //
+            <input type="text" placeholder="mudar nome" id="name" name="name">
+        </label>
+        <br>
+        <label for="price">
+            <span>Preço: {{product.price}}</span> // 
+            <input type="number" placeholder="mudar preço" id="price" name="price">
+        </label>
+        <br>
+        <label for="description">
+            <span>Descrição: {{product.description}}</span> //
+            <input type="text" placeholder="mudar descrição" id="description" name="description">
+        </label>
+        <br>
+        <label for="category">
+            <span>Categoria: {{product.category.name}}</span> //
+            <select name="category-id" id="category-id">
+                <option selected value="0">{{product.category.name}}</option>
+                {% for category in categories %}
+                    {% if product.category.id != category.id %}
+                    <option value="{{category.id}}">{{category.name}}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </label>
+        <br>
+        <label for="stock">
+            <span>Estoque: {{product.stock}}</span> //
+            <input type="number" placeholder="mudar estoque" id="stock" name="stock">
+        </label>
+        <br>
+        <label for="is-active">
+            <span>Ativo:</span> 
+            <input 
+                type="checkbox" 
+                name="is-active" 
+                id="is-active" 
+                value="1" 
+                {% if product.is_active %}
+                    checked
+                {% endif %}
+            >
+        </label>
+        <br>
+        <label for="image">
+            <span>Imagem: {{product.image}}</span> // 
+            <input type="text" placeholder="mudar imagem" name="image" id="image">
+        </label>
+        <input type="hidden" name="product-id" value="{{product.id}}">
+        <br>
+        <button type="submit">Salvar</button>
+    </form>
+{% endblock %}

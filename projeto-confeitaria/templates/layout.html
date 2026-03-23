@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{%block title%} {%endblock%}</title>
-    <script src=""></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
     <header style="width: 100%;">
@@ -12,11 +12,13 @@
             <ul style="display: flex; flex-direction: row; gap: 50px;">
                 <li><a href="{{ url_for('index')}}">Inicio</a></li>
                 <li><a href="{{ url_for('products.products')}}">Produtos</a></li>
+                <li><a href="{{ url_for('categories.categories')}}">Categorias</a></li>
                 <li><a href="{{ url_for('cart.cart')}}">Carrinho</a></li>
                 <li><a href="{{ url_for('orders.orders')}}">Pedidos</a></li>
                 <li><a href="{{ url_for('auth.login')}}">Entrar</a></li>
                 <li><a href="{{ url_for('auth.register')}}">Registrar</a></li>
-                <a href="{{ url_for('auth.logout')}}">Sair</a>
+                <li><a href="{{ url_for('auth.profile')}}">Perfil</a></li>
+                <li><a href="{{ url_for('auth.logout')}}">Sair</a></li>
             </ul>
         </nav>
     </header>

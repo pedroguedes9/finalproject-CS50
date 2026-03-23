@@ -1,12 +1,13 @@
 from db import db
 from flask_login import UserMixin
 from sqlalchemy import func
+from decimal import Decimal
 
 class Users(UserMixin, db.Model):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(30), nullable=False, unique=True )
+    username = db.Column(db.String(30), nullable=False )
     email = db.Column(db.String(100), nullable=False, unique=True)
     password = db.Column(db.String, nullable=False) #255 para senha pois usa um hash
     phone_number = db.Column(db.String(15), nullable=False)
@@ -31,14 +32,14 @@ class Products(db.Model):
     price = db.Column(db.Numeric(10, 2), nullable=False)
     description = db.Column(db.String, nullable=True)
     category_id = db.Column(db.Integer, db.ForeignKey("categories.id"), nullable=True)
-    stock = db.Column(db.Integer, nullable=True)
+    stock = db.Column(db.Integer, nullable=False)
     is_active = db.Column(db.Boolean, nullable=False, default=1)
     image = db.Column(db.String, nullable=True)
     created_at = db.Column(db.DateTime, default=func.now())
 
     order_items = db.relationship("OrderItems", backref="product")
 
-    def __init__(self, name:str, price:float, description:str | None, category_id:int | None, stock:int, image:str | None, is_active:int ):
+    def __init__(self, name:str, price:Decimal, description:str | None, category_id:int | None, stock:int, image:str | None, is_active:int ):
         self.name = name
         self.price = price
         self.description = description
@@ -69,7 +70,7 @@ class CartItems(db.Model):
     created_at = db.Column(db.DateTime, default=func.now())
 
     product = db.relationship("Products", backref="cart_items")
-
+    
     def __init__(self,user_id:int, product_id:int, quantity:int):
         self.user_id = user_id
         self.product_id = product_id
@@ -90,7 +91,7 @@ class Orders(db.Model):
 
     items = db.relationship("OrderItems", backref="order")
 
-    def __init__(self, user_id:int, status:str, total_price:float ):
+    def __init__(self, user_id:int, status:str, total_price:Decimal ):
         self.user_id = user_id
         self.status = status
         self.total_price = total_price
@@ -104,7 +105,7 @@ class OrderItems(db.Model):
     price = db.Column(db.Numeric(10, 2), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
 
-    def __init__(self, order_id: int, product_id:int, price:float, quantity:int):
+    def __init__(self, order_id: int, product_id:int, price:Decimal, quantity:int):
         self.order_id =order_id
         self.product_id = product_id
         self.price = price

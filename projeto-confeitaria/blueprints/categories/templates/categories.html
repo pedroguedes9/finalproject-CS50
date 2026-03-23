@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block main %}
+    <h2>Adicionar categoria</h2>
+    <form action="{{url_for('categories.add_category')}}" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="text" name="name" placeholder="nome da categoria">
+        <button type="submit">Adicionar categoria</button>
+    </form>
+    
+    {% if not categories %}
+        <p>Não há nenhuma categoria criada ainda.</p>
+    {% else %}
+        <table>
+            <thead>
+                <th>Id</th>
+                <th>Name</th>
+            </thead>
+            <tbody>
+                {% for category in categories %}
+                    <tr>
+                        <td>{{category.id}}</td>
+                        <td>{{category.name}}</td>
+                        <td>
+                            <form action="{{ url_for('categories.edit_category')}}" method="post">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <input type="hidden" value="{{category.id}}" name="id">
+                                <input type="text" placeholder="nome novo da categoria" name="new-name">
+                                <button type="submit">Editar nome</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}

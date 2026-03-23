@@ -1,43 +1,48 @@
 {% extends "layout.html" %}
 {% block main %}
     <h1>Carrinho</h1>
-    <table>
-        <thead>
-            <th>Nome</th>
-            <th>Preco</th>
-            <th>Descricao</th>
-            <th>Quantidade</th>
-            <th>Categoria</th>
-            <th>Estoque</th>
-            <th>Ativo</th>
-            <th>Imagem</th>
-        </thead>
-        <tbody>
-            {% for item in cart_items %}
-                <tr style="border: 1px solid black;">
-                    <td style="border: 1px solid black;">{{item.product.name}}</td>
-                    <td style="border: 1px solid black;">{{item.product.price}}</td>
-                    <td style="border: 1px solid black;">{{item.product.description}}</td>
-                    <td style="border: 1px solid black;">{{item.quantity}}</td>
-                    <td style="border: 1px solid black;">{{item.product.category.name}}</td>
-                    <td style="border: 1px solid black;">{{item.product.stock}}</td>
-                    <td style="border: 1px solid black;">{{item.product.is_active}}</td>
-                    <td style="border: 1px solid black;">{{item.product.image}}</td>
-                    <td style="border: 1px solid black;">
-                        <form action="{{url_for('cart.remove_from_cart')}}" method="post">
-                            <input type="hidden" name="id" value="{{item.id}}">
-                            <input type="hidden" name="user-id" value="{{user_id}}">
-                            <button type="submit">Remover do carrinho</button>
-                        </form>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <p>Preco total: {{total_price}}</p>
-    <form action="{{url_for('orders.checkout')}}" method="post">
-        <input type="hidden" name="user-id" value="{{user_id}}">
-        <button type="submit">Finalizar compra</button>
-    </form>
-    
+    {% if not cart_items%}
+        <p>Seu carrinho está vazio</p>
+    {% else %}
+        <table>
+            <thead>
+                <th>Nome</th>
+                <th>Preco</th>
+                <th>Descricao</th>
+                <th>Quantidade</th>
+                <th>Categoria</th>
+                <th>Estoque</th>
+                <th>Ativo</th>
+                <th>Imagem</th>
+            </thead>
+            <tbody>
+                {% for item in cart_items %}
+                    <tr style="border: 1px solid black;">
+                        <td style="border: 1px solid black;">{{item.product.name}}</td>
+                        <td style="border: 1px solid black;">{{item.product.price}}</td>
+                        <td style="border: 1px solid black;">{{item.product.description}}</td>
+                        <td style="border: 1px solid black;">{{item.quantity}}</td>
+                        <td style="border: 1px solid black;">{{item.product.category.name}}</td>
+                        <td style="border: 1px solid black;">{{item.product.stock}}</td>
+                        <td style="border: 1px solid black;">{{item.product.is_active}}</td>
+                        <td style="border: 1px solid black;">{{item.product.image}}</td>
+                        <td style="border: 1px solid black;">
+                            <form action="{{url_for('cart.remove_from_cart')}}" method="post">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <input type="hidden" name="id" value="{{item.id}}">
+                                <input type="hidden" name="user-id" value="{{user_id}}">
+                                <button type="submit">Remover do carrinho</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <p>Preco total: {{total_price}}</p>
+        <form action="{{url_for('orders.checkout')}}" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="user-id" value="{{user_id}}">
+            <button type="submit">Finalizar compra</button>
+        </form>
+    {% endif %}
 {% endblock %}

@@ -1,12 +1,14 @@
 import os
 from flask import Flask, render_template
 from flask_login import LoginManager
+from flask_wtf.csrf import CSRFProtect
 from db import db
 from models import Users
 from blueprints.cart.cart import cart_bp
 from blueprints.products.products import products_bp
 from blueprints.orders.orders import orders_bp
 from blueprints.auth.auth import auth_bp
+from blueprints.categories.categories import categories_bp
 from dotenv import load_dotenv
 
 
@@ -21,13 +23,16 @@ db.init_app(app)
 
 login_manager = LoginManager(app)
 login_manager.login_view = 'auth.login'
+login_manager.login_message = "Por favor, faça login para acessar está página"
+login_manager.login_message_category = "warning"
 
 app.register_blueprint(products_bp, url_prefix="/products")
 app.register_blueprint(cart_bp, url_prefix="/cart")
 app.register_blueprint(orders_bp, url_prefix="/orders")
 app.register_blueprint(auth_bp, url_prefix="/auth")
+app.register_blueprint(categories_bp, url_prefix="/categories")
 
-
+csrf = CSRFProtect(app)
 
 @login_manager.user_loader
 def load_user(user_id):

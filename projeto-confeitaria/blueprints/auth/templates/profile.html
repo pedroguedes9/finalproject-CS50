@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block main %}
+    <h1>Perfil</h1>
+    <form action="{{url_for('auth.profile')}}" method="post">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label for="username">
+            <span>Nome: {{user.username}}</span> // 
+            <input type="text" placeholder="Mudar nome" name="username" id="username">
+        </label>
+        <br>
+        <label for="phone">
+            <span>Telefone: {{user.phone_number}}</span> //
+            <input type="text" placeholder="Mudar telefone" name="phone" id="phone">
+        </label>
+        <p>Email: {{user.email}}</p>
+        <button type="submit"  style="margin-bottom: 20px;" >Salvar alterações</button>
+    </form>
+{% endblock %}

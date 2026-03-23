@@ -1,4 +1,4 @@
 /** @type {import('tailwindcss').Config} */
-/* module.exports = { */
-/*     content: ["./templates/**.html"]
-}/*  */
+module.exports = { 
+    content: ["./**/*.html"]
+}  

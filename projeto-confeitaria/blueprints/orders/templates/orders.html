@@ -1,32 +1,39 @@
 {% extends "layout.html" %}
 {% block main %}
     <h1>Pedidos</h1>
-    
-    {% for order in orders %}
-        <h3>Pedido: {{loop.index}}</h3>
-        <table>
-            <thead>
-                <th>Nome do produto</th>
-                <th>Preco</th>
-                <th>Descricao</th>
-                <th>Categoria</th>
-                <th>Imagem</th>
-                <th>Quantidade</th>
-            </thead>
-            <tbody>
-                {% for order_item in order.items %}
-                    <tr>
-                        <td style="border: 1px solid black;">{{order_item.product.name}}</td>
-                        <td style="border: 1px solid black;">{{order_item.price}}</td>
-                        <td style="border: 1px solid black;">{{order_item.product.description}}</td>
-                        <td style="border: 1px solid black;">{{order_item.product.category.name}}</td>
-                        <td style="border: 1px solid black;">{{order_item.product.image}}</td>
-                        <td style="border: 1px solid black;">{{order_item.quantity}}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <p>Total do pedido: {{order.total_price}}</p>
-    {% endfor %}
-    
+    {% if not orders %}
+        <p>Você não tem nenhum pedido</p>
+    {% else %}
+        {% for order in orders %}
+            <h3>Pedido: {{loop.index}}</h3>
+            <table>
+                <thead>
+                    <th>Nome do produto</th>
+                    <th>Preco</th>
+                    <th>Descricao</th>
+                    <th>Categoria</th>
+                    <th>Imagem</th>
+                    <th>Quantidade</th>
+                </thead>
+                <tbody>
+                    {% for order_item in order.items %}
+                        <tr>
+                            <td style="border: 1px solid black;">{{order_item.product.name}}</td>
+                            <td style="border: 1px solid black;">{{order_item.price}}</td>
+                            <td style="border: 1px solid black;">{{order_item.product.description}}</td>
+                            <td style="border: 1px solid black;">
+                                {% if order_item.product.category %}
+                                    {{order_item.product.category.name}}
+                                {% endif %}
+                            </td>
+                            <td style="border: 1px solid black;">{{order_item.product.image}}</td>
+                            <td style="border: 1px solid black;">{{order_item.quantity}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <p>Total do pedido: {{order.total_price}}</p>
+            <p>Status: {{order.status}}</p>
+        {% endfor %}
+    {% endif %}
 {% endblock %}

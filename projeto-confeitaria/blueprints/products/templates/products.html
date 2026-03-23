@@ -3,72 +3,72 @@
     <h1>Produtos</h1>
     <h2>Adicionar produto</h2>
     <form action="{{ url_for('products.products') }}" method="post" >
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <input type="text" name="name" placeholder="nome">
         <input type="number" name="price" placeholder="preco">
         <input type="text" name="description" placeholder="descricao">
-        <input type="number" name="category-id" placeholder="id da categoria">
+        <select name="category-id" id="categories">
+            <option selected disabled value="0">categorias</option>
+            {% for category in categories %}
+                <option value="{{category.id}}">{{category.name}}</option>
+            {% endfor %}
+        </select>
         <input type="number" name="stock" placeholder="estoque">
-        <input type="checkbox" name="is-active" value="1">
+        <label>
+            <span>Disponibilidade:</span>
+            <input type="checkbox" name="is-active" value="1">
+        </label>
         <input type="text" name="image" placeholder="imagem">
         <button type="submit">Adicionar produto</button>
     </form>
-    <table>
-        <thead>
-            <th>Nome</th>
-            <th>Preco</th>
-            <th>Descricao</th>
-            <th>Categoria</th>
-            <th>Estoque</th>
-            <th>Ativo</th>
-            <th>Imagem</th>
-        </thead>
-        <tbody>
-            {% for product in products %}
-            <tr style="border: 1px solid black;">
-                <td style="border: 1px solid black;" >{{product.name}}</td>
-                <td style="border: 1px solid black;">{{product.price}}</td>
-                <td style="border: 1px solid black;">{{product.description}}</td>
-                <td style="border: 1px solid black;">{{product.category.name}}</td>
-                <td style="border: 1px solid black;">{{product.stock}}</td>
-                <td style="border: 1px solid black;">{{product.is_active}}</td>
-                <td style="border: 1px solid black;">{{product.image}}</td>
-                <td>
-                    <form action="{{url_for('cart.add_to_cart')}}" method="post">
-                        <input type="hidden" value="{{product.id}}" name="id">
-                        Quantidade: <input type="number" name="quantity">
-                        <button type="submit">Adicionar ao carrinho</button>
-                    </form>
-                </td>
-                <td>
-                    <form action="{{url_for('products.delete_product')}}" method="post">
-                        <input type="hidden" value="{{product.id}}" name="id">
-                        <button type="submit">Excluir</button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ url_for('cart.cart') }}">Carrinho</a>
-    <h2>Adicionar categoria</h2>
-    <form action="{{url_for('products.add_category')}}" method="post">
-        <input type="text" name="name" placeholder="nome da categoria">
-        <button type="submit">Adicionar categoria</button>
-    </form>
-    
-    <table>
-        <thead>
-            <th>Id</th>
-            <th>Name</th>
-        </thead>
-        <tbody>
-            {% for category in categories %}
-                <tr>
-                    <td>{{category.id}}</td>
-                    <td>{{category.name}}</td>
+    {% if not products %}
+        <p>Não há nenhum produto criado ainda.</p>
+    {% else %}
+        <table>
+            <thead>
+                <th>Nome</th>
+                <th>Preco</th>
+                <th>Descricao</th>
+                <th>Categoria</th>
+                <th>Estoque</th>
+                <th>Ativo</th>
+                <th>Imagem</th>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr style="border: 1px solid black;">
+                    <td style="border: 1px solid black;" >{{product.name}}</td>
+                    <td style="border: 1px solid black;">{{product.price}}</td>
+                    <td style="border: 1px solid black;">{{product.description}}</td>
+                    <td style="border: 1px solid black;">{{product.category.name}}</td>
+                    <td style="border: 1px solid black;">{{product.stock}}</td>
+                    <td style="border: 1px solid black;">{{product.is_active}}</td>
+                    <td style="border: 1px solid black;">{{product.image}}</td>
+                    <td>
+                        <form action="{{url_for('cart.add_to_cart')}}" method="post">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <input type="hidden" value="{{product.id}}" name="id">
+                            Quantidade: <input type="number" name="quantity">
+                            <button type="submit">Adicionar ao carrinho</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form action="{{url_for('products.delete_product')}}" method="post">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <input type="hidden" value="{{product.id}}" name="id">
+                            <button type="submit" onclick="return confirm('Tem certeza que quer deletar este produto?')">Excluir</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form action="{{url_for('products.edit_product')}}" method="get">
+                            <input type="hidden" value="{{product.id}}" name="id">
+                            <button type="submit">Editar</button>
+                        </form>
+                    </td>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
 {% endblock %}

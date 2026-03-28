@@ -40,8 +40,8 @@ def register():
             return redirect(url_for("auth.register"))
 
         phone_digits = re.sub(r"\D", "", phone)
-        if not re.fullmatch(r"^(?:55)?[1-9][0-9][9][0-9]{8}$|^(?:55)?[1-9][0-9][2-8][0-9]{7}$", phone_digits):
-            flash("Telefone inválido. Informe um número brasileiro válido.", "error")
+        if not re.fullmatch(r"\d{8,15}", phone_digits):
+            flash("Telefone inválido. Use entre 8 e 15 dígitos", "error")
             return redirect(url_for("auth.register"))
         phone = phone_digits
         
@@ -78,7 +78,7 @@ def login():
         password = request.form.get("password", "").strip()
         
         if not email or not password:
-            flash("Por favor, insira um email e senha", "error")
+            flash("Por favor, insira um email e senha", "warning")
             return redirect(url_for('auth.login'))
         
         email_regex = r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"
@@ -123,7 +123,7 @@ def profile():
                 changed = True
 
         if not changed:
-            flash("Nenhuma alteração no perfil foi feita", "warning")
+            flash("Nenhuma alteração no perfil foi feita", "info")
             return redirect(url_for('index'))
         
         try: 

@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
-{% block title %} Produtos {% endblock %}
 {% block main %}
-    <h1 class="text-3xl font-serif font-bold text-center" >Produtos</h1>
+    <h1>Produtos</h1>
+    <h2>Adicionar produto</h2>
     <form action="{{ url_for('products.products') }}" method="post" >
         <div class="flex justify-center mt-6">
             <div class="space-y-12 max-w-md w-full mx-auto">

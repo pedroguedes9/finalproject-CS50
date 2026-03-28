@@ -57,7 +57,6 @@ def add_to_cart():
         new_cart_item = CartItems(user_id=user_id, product_id=product_id, quantity=quantity)
         db.session.add(new_cart_item)
     db.session.commit()
-    flash("Item adicionado ao carrinho!", "success")
     return redirect(url_for("products.products"))
 
 @cart_bp.route("/", methods=["GET"])
@@ -78,10 +77,10 @@ def remove_from_cart():
     try:
         item_id = int(item_id)
     except ValueError:
-        flash("O id do item tem que ser um número", "error")
+        flash("O id do item tem que ser um número")
         return redirect(url_for('cart.cart'))
     if item_id < 1:
-        flash("O id do item tem que ser maior que 0", "error")
+        flash("O id do item tem que ser maior que 0")
         return redirect(url_for('cart.cart'))
     
     item = CartItems.query.filter_by(id=item_id, user_id=user_id).first()
@@ -91,5 +90,4 @@ def remove_from_cart():
     
     db.session.delete(item)
     db.session.commit()
-    flash("Item removido do carrinho.", "success")
     return redirect(url_for('cart.cart'))

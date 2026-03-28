@@ -47,7 +47,7 @@ def products():
             flash("O id da categoria do produto deve ser maior que 0", "error")
             return redirect(url_for('products.products'))
         if not Categories.query.filter_by(id=category_id).first():
-            flash("A categoria inserida não existe", "error")
+            flash("A categoria inserida não existe", "")
             return redirect(url_for('products.products'))
 
 
@@ -71,7 +71,6 @@ def products():
         new_product = Products(name=name, price=price, description=description, category_id=category_id, stock=stock, is_active=is_active, image=image)
         db.session.add(new_product)
         db.session.commit()
-        flash("Produto criado com sucesso", "success")
         return redirect(url_for('products.products'))
     else:
         products = Products.query.all()
@@ -105,7 +104,6 @@ def delete_product():
         db.session.rollback()
         flash("Não é possível excluir esse produto pois ele á está no carrinho ou no registro de pedidos de alguém", "error")
         return redirect(url_for('products.products'))
-    flash("Produto deletado", "success")
     return redirect(url_for('products.products'))
 
 @products_bp.route("/edit", methods=["POST", "GET"])
@@ -181,7 +179,6 @@ def edit_product():
                 changed = True
 
         stock = request.form.get("stock","")
-        old_stock = product.stock
         if not stock == "":
             try: 
                 stock = int(stock)
@@ -199,9 +196,6 @@ def edit_product():
         if product.is_active != is_active:
             product.is_active = is_active
             changed = True
-        if old_stock == 0 and product.stock > 0 and product.is_active == False :
-            product.is_active = True
-            changed = True
 
         image = request.form.get("image","").strip()
         current_image = product.image or ""
@@ -210,7 +204,7 @@ def edit_product():
             changed = True
         
         if not changed:
-            flash("Nenhuma alteração foi feita", "warning")
+            flash("Nenhuma alteração foi feita", "info")
             return redirect(url_for('products.edit_product', id=product_id))
 
         try:

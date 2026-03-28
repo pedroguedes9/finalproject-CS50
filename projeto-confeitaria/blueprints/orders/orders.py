@@ -12,7 +12,7 @@ def checkout():
     user_cart_items = CartItems.query.filter_by(user_id=user_id).all()
 
     if not user_cart_items:
-        flash("Seu carrinho está vazio", "warning")
+        flash("Seu carrinho está vazio", "error")
         return redirect(url_for("cart.cart"))
     
     total_price = sum(Decimal(item.product.price) * Decimal(item.quantity) for item in user_cart_items)
@@ -22,18 +22,17 @@ def checkout():
 
     for item in user_cart_items:
         if item.product.stock < item.quantity:
-            flash("Não há itens suficientes no estoque. Sua compra não foi finalizada", "warning")
-            db.session.rollback()
-            return redirect(url_for("cart.cart"))
-
-        if not item.product.is_active:
-            flash("O produto que você está tentando comprar não está mais disponível. Sua compra não foi finalizada", "warning")
+            flash("Não há itens suficientes no estoque. Sua compra não foi finalizada", "error")
             db.session.rollback()
             return redirect(url_for("cart.cart"))
         
         item.product.stock = item.product.stock - item.quantity
-        if item.product.stock == 0:
-            item.product.is_active = False
+
+        if item.product.is_active == False:
+            flash("O produto que você está tentando comprar não está mais disponível. Sua compra não foi finalizada", "error")
+            db.session.rollback()
+            return redirect(url_for("cart.cart"))
+        
         new_ordered_item = OrderItems(
             order_id=new_order.id,
             product_id=item.product_id,
@@ -43,7 +42,6 @@ def checkout():
         db.session.add(new_ordered_item)
         db.session.delete(item)
     db.session.commit()
-    flash("Compra realizada com sucesso", "success")
     return redirect(url_for("cart.cart"))
 
 @orders_bp.route("/", methods=[ "GET"])

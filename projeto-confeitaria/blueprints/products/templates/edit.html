@@ -1,5 +1,4 @@
 {% extends "layout.html" %}
-{% block title %} Edição de produtos {% endblock %}
 {% block main %}
     <form action="{{url_for('products.edit_product')}}" method="post">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">

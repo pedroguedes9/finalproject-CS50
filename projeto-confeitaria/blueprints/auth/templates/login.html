@@ -1,10 +1,44 @@
 {% extends "layout.html" %}
+{% block title %}Login{%endblock%}
 {% block main %}
     <form action="{{ url_for('auth.login')}}" method="post">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <input type="email" placeholder="email" name="email">
-        <input type="password" placeholder="senha" name="password">
-        <button type="submit">Entrar</button>
+        <div class=" flex justify-center"> 
+            <div class="space-y-12 max-w-md w-full mx-auto">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="mb-12">
+                    <label for="email" class="block mb-2.5 text-sm font-medium font-serif text-[#373831]">Email</label>
+                    <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    autocomplete="email"
+                    class="bg-[#eae9dd] text-pink-900 text-sm
+                    rounded-lg focus:ring-2 focus:ring-[#f7c5c5] block w-full px-3 py-2.5 shadow-sm placeholder:text-gray-600/60"
+                    placeholder="nome.user@gmail.com"
+                    required />
+                </div>
+                <div class="mb-12">
+                    <label for="password" class="block mb-2.5 text-sm font-medium font-serif text-[#373831]">Senha</label>
+                    <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    autocomplete="new-password"
+                    class="bg-[#eae9dd] text-pink-900 text-sm rounded-lg focus:ring-2
+                    focus:ring-[#f7c5c5] block w-full px-3 py-2.5 shadow-sm placeholder:text-gray-600/60"
+                    placeholder="•••••••••"
+                    required />
+                </div>
+                <div class="flex justify-center">
+                    <button
+                        type="submit"
+                        class="text-white bg-[#815a5b] hover:bg-[#a97c7d] shadow-xl shadow-[#815a5b]/5 transition duration-300 focus:ring-2 focus:ring-[#f7c5c5]
+                        font-medium leading-5 rounded-full text-sm px-8 py-3 focus:outline-none ">
+                        Entrar
+                    </button>
+                </div>
+            </div>
+        </div>
     </form>
     
 

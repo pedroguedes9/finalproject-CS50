@@ -1,21 +1,75 @@
 {% extends "layout.html" %}
 {% block title %} Registro {% endblock %}
 {% block main %}
-    <h1 class="">Criar conta</h1>
     <form action="{{ url_for('auth.register')}}" method="post">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <input name="username" type="text" autocomplete="username" placeholder="nome de usuario" class="block"  >
-        <input name="email" type="email" autocomplete="email" placeholder="email" class="block">
-        <input name="password" type="password" autocomplete="new-password" placeholder="senha" class="block">
-        <input name="phone" type="tel" autocomplete="tel-national" placeholder="telefone" class="block">
-        <button>Cadastrar usuario</button>
+        <div class=" flex justify-center ">
+            <div class="space-y-12 max-w-md w-full mx-auto">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="mb-12">
+                    <label for="username" class="block mb-2.5 text-sm font-medium font-serif text-[#373831]">Nome de usuário:</label>
+                    <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    autocomplete="username"
+                    class="bg-[#eae9dd] text-pink-900 text-sm rounded-lg focus:ring-2
+                    focus:ring-[#f7c5c5] block w-full px-3 py-2.5 shadow-sm placeholder:text-gray-600/60"
+                    placeholder="Seu nome"
+                    required />
+                </div>
+                <div class="mb-12">
+                    <label for="email" class="block mb-2.5 text-sm font-medium font-serif text-[#373831]">Email:</label>
+                    <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    autocomplete="email"
+                    class="bg-[#eae9dd] text-pink-900 text-sm
+                    rounded-lg focus:ring-2 focus:ring-[#f7c5c5] block w-full px-3 py-2.5 shadow-sm placeholder:text-gray-600/60"
+                    placeholder="nome.user@gmail.com"
+                    required />
+                </div>
+                <div class="mb-12">
+                    <label for="password" class="block mb-2.5 text-sm font-medium font-serif text-[#373831]">Senha:</label>
+                    <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    autocomplete="new-password"
+                    class="bg-[#eae9dd] text-pink-900 text-sm rounded-lg focus:ring-2
+                    focus:ring-[#f7c5c5] block w-full px-3 py-2.5 shadow-sm placeholder:text-gray-600/60"
+                    placeholder="•••••••••"
+                    required />
+                </div>
+                <div class="mb-12">
+                    <label for="phone" class="block mb-2.5 text-sm font-medium font-serif text-[#373831] ">Telefone:</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 start-0 top-0 flex items-center ps-3.5 pointer-events-none">
+                            <svg class="w-4 h-4 text-body" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.427 14.768 17.2 13.542a1.733 1.733 0 0 0-2.45 0l-.613.613a1.732 1.732 0 0 1-2.45 0l-1.838-1.84a1.735 1.735 0 0 1 0-2.452l.612-.613a1.735 1.735 0 0 0 0-2.452L9.237 5.572a1.6 1.6 0 0 0-2.45 0c-3.223 3.2-1.702 6.896 1.519 10.117 3.22 3.221 6.914 4.745 10.12 1.535a1.601 1.601 0 0 0 0-2.456Z"/></svg>
+                        </div>
+                        <input 
+                        type="tel" 
+                        id="phone" 
+                        name="phone"
+                        autocomplete="tel-national"
+                        class="block w-full ps-9 pe-3 py-2.5 bg-[#eae9dd] text-pink-900
+                        text-heading text-sm rounded-lg focus:ring-2 focus:ring-[#f7c5c5] shadow-xs shadow-[#815a5b]/5 placeholder:text-gray-600/60" 
+                        pattern="\s*(\d{2}|\d{0})[-. ]?(\d{5}|\d{4})[-. ]?(\d{4})[-. ]?\s*" 
+                        placeholder="(xx) xxxx-xxxx" 
+                        required />
+                    </div>
+                </div>
+                <div class="flex justify-center">
+                    <button
+                        type="submit"
+                        class="text-white bg-[#815a5b] hover:bg-[#a97c7d] shadow-xl shadow-[#815a5b]/5 transition duration-300 focus:ring-2 focus:ring-[#f7c5c5]
+                        font-medium leading-5 rounded-full text-sm px-8 py-3 focus:outline-none ">
+                        Registrar
+                    </button>
+                </div>
+            </div>
+            
+        </div>
     </form>
-    
-    {% if current_user.is_authenticated %}
-        <h1>Voce esta logado! Ola {{current_user.username}}</h1>
-    {% else %}
-        <h1>Voce nao esta logado!</h1>
-    {%endif%}
-    <a href="{{ url_for('products.products') }}">Produtos</a>
 
 {% endblock %}

@@ -1,25 +1,61 @@
 {% extends "layout.html" %}
+{% block title %} Produtos {% endblock %}
 {% block main %}
-    <h1>Produtos</h1>
-    <h2>Adicionar produto</h2>
+    <h1 class="text-3xl font-serif font-bold text-center" >Produtos</h1>
     <form action="{{ url_for('products.products') }}" method="post" >
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <input type="text" name="name" placeholder="nome">
-        <input type="number" name="price" placeholder="preco">
-        <input type="text" name="description" placeholder="descricao">
-        <select name="category-id" id="categories">
-            <option selected disabled value="0">categorias</option>
-            {% for category in categories %}
-                <option value="{{category.id}}">{{category.name}}</option>
-            {% endfor %}
-        </select>
-        <input type="number" name="stock" placeholder="estoque">
-        <label>
-            <span>Disponibilidade:</span>
-            <input type="checkbox" name="is-active" value="1">
-        </label>
-        <input type="text" name="image" placeholder="imagem">
-        <button type="submit">Adicionar produto</button>
+        <div class="flex justify-center mt-6">
+            <div class="space-y-12 max-w-md w-full mx-auto">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="mb-12">
+                    <label for="name" class="block mb-2.5 text-sm font-medium font-serif text-[#373831]">Nome:</label>
+                    <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    aria-describedby="helper-text-explanation" 
+                    class="bg-[#eae9dd] text-pink-900 text-sm
+                    rounded-lg focus:ring-2 focus:ring-[#f7c5c5] block w-full px-3 py-2.5 shadow-sm placeholder:text-gray-600/60"
+                    placeholder="Nome do produto"
+                    required />
+                </div>
+                <div>
+                    <label for="price" class="block mb-2.5 text-sm font-medium text-heading">Selecione um preço:</label>
+                    <input 
+                    type="number" 
+                    id="price" 
+                    name="price"
+                    aria-describedby="helper-text-explanation" 
+                    class="bg-[#eae9dd] text-pink-900 text-sm rounded-lg focus:ring-2
+                    focus:ring-[#f7c5c5] block w-full px-3 py-2.5 shadow-sm placeholder:text-gray-600/60" 
+                    placeholder="R$" 
+                    required />
+                </div>
+                <div class="mb-12">
+                    <label for="description" class="block mb-2.5 text-sm font-medium font-serif text-[#373831]">Descrição:</label>
+                    <input
+                    type="text"
+                    id="description"
+                    name="description"
+                    class="bg-[#eae9dd] text-pink-900 text-sm rounded-lg focus:ring-2
+                    focus:ring-[#f7c5c5] block w-full px-3 py-2.5 shadow-sm placeholder:text-gray-600/60"
+                    placeholder="Descrição do produto"
+                    required />
+                </div>
+                <select name="category-id" id="categories">
+                    <option selected disabled value="0">categorias</option>
+                    {% for category in categories %}
+                        <option value="{{category.id}}">{{category.name}}</option>
+                    {% endfor %}
+                </select>
+                <input type="number" name="stock" placeholder="estoque">
+                <label>
+                    <span>Disponibilidade:</span>
+                    <input type="checkbox" name="is-active" value="1">
+                </label>
+                <input type="text" name="image" placeholder="imagem">
+                <button type="submit">Adicionar produto</button>
+            </div>
+        </div>
     </form>
     {% if not products %}
         <p>Não há nenhum produto criado ainda.</p>

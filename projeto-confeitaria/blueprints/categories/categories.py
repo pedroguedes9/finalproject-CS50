@@ -34,6 +34,7 @@ def add_category():
         flash("Não foi possível realizar a criação da categoria. Tente novamente mais tarde", "error")
         db.session.rollback()
         return redirect(url_for('categories.categories'))
+    flash("Categoria criada com sucesso", "success")
     return redirect(url_for('categories.categories'))
 
 
@@ -75,4 +76,5 @@ def edit_category():
         flash("Ocorreu algum erro, sua alteração não foi confirmada. Tente novamente mais tarde", "error")
         db.session.rollback()
         return redirect(url_for('categories.categories'))
+    flash("Categoria editada com sucesso", "success")
     return redirect(url_for('categories.categories'))

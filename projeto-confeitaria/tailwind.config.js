@@ -2,12 +2,12 @@
 module.exports = { 
     content: ["./**/*.html"],
     theme: {
-        extends: {
+        extend: {
             colors: {
-                primary: '#815a5b',
-                secondary: '#f7c5c5',
-                background: '#eae9dd',
-                accent: '#a97c7d',
+                'brand-primary': '#815a5b',
+                'brand-secondary': '#f7c5c5',
+                'brand-background': '#eae9dd',
+                'brand-accent': '#a97c7d',
                 'text-main': '#831843',
                 danger: '#b91c1c',
                 'danger-hover': '#991b1b',

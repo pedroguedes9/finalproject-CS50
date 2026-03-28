@@ -2,6 +2,7 @@
 {% block title %} Registro {% endblock %}
 {% block main %}
     <form action="{{ url_for('auth.register')}}" method="post">
+<<<<<<< HEAD
         <div class=" flex justify-center ">
             <div class="space-y-12 max-w-md w-full mx-auto">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">

@@ -8,24 +8,26 @@
                 <div class=" w-full max-w-md ">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="mb-6">
-                        <label for="new-username" class="block mb-2.5 text-sm font-medium font-serif text-[#373831]"><span class="font-semibold">Nome atual:</span> {{user.username}}</label>
+                        <label for="new-username" class="block mb-2.5 text-sm font-medium font-serif text-[#373831]"><span class="font-semibold">Nome</label>
                         <input
                         type="text"
                         id="new-username"
                         name="username"
                         autocomplete="username"
+                        value="{{user.username}}"
                         class="bg-[#eae9dd] text-pink-900 text-sm rounded-lg focus:ring-2
                         focus:ring-[#f7c5c5] block w-full px-3 py-2.5 shadow-sm placeholder:text-gray-600/60"
                         placeholder="Seu novo nome"
                         required />
                     </div>
                     <div class="mb-6">
-                        <label for="phone" class="block mb-2.5 text-sm font-medium font-serif text-[#373831]"><span class="font-semibold">Telefone atual:</span> {{user.phone_number}}</label>
+                        <label for="phone" class="block mb-2.5 text-sm font-medium font-serif text-[#373831]"><span class="font-semibold">Telefone</label>
                         <input
                         type="tel"
                         id="phone"
                         name="phone"
                         autocomplete="tel-national"
+                        value="{{user.phone_number}}"
                         class="bg-[#eae9dd] text-pink-900
                         text-sm rounded-lg focus:ring-2 focus:ring-[#f7c5c5] block w-full px-3 py-2.5 shadow-sm placeholder:text-gray-600/60"
                         placeholder="Novo telefone: (xx) xxxx-xxxx"

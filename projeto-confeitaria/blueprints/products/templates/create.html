@@ -1,8 +1,10 @@
 {% extends "layout.html" %}
+{% block title %} Criar produtos {% endblock %} 
 {% block main %}
-    <form action="{{url_for('products.edit_product')}}" method="post" enctype="multipart/form-data">
+    <h1 class="text-center font-bold font-serif text-3xl mt-3">Criar um produto</h1>
+    <form action="{{ url_for('products.create_product') }}" enctype="multipart/form-data" method="post" >
         <div class="flex justify-center mt-3">
-            <div class="space-y-8 max-w-md w-full mx-auto">
+            <div class="space-y-8 max-w-72  md:max-w-lg w-full mx-auto">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="mb-12">
                     <label for="name" class="block mb-2.5 text-sm font-medium font-serif text-[#373831]">Nome:</label>
@@ -10,11 +12,10 @@
                     type="text"
                     id="name"
                     name="name"
-                    value="{{product.name}}"
                     aria-describedby="helper-text-explanation" 
                     class="bg-[#eae9dd] text-pink-900 text-sm
                     rounded-lg focus:ring-2 focus:ring-[#f7c5c5] block w-full px-3 py-2.5 shadow-sm placeholder:text-gray-600/60"
-                    placeholder="Mudar nome"
+                    placeholder="Nome do produto"
                     required />
                 </div>
                 <div>
@@ -23,11 +24,10 @@
                     type="number" 
                     id="price" 
                     name="price"
-                    value="{{product.price}}"
                     aria-describedby="helper-text-explanation" 
                     class="bg-[#eae9dd] text-pink-900 text-sm rounded-lg focus:ring-2
                     focus:ring-[#f7c5c5] block w-full px-3 py-2.5 shadow-sm placeholder:text-gray-600/60" 
-                    placeholder="Mudar R$" 
+                    placeholder="R$" 
                     required />
                 </div>
                 <div class="mb-12">
@@ -36,10 +36,9 @@
                     type="text"
                     id="description"
                     name="description"
-                    value="{{product.description}}"
                     class="bg-[#eae9dd] text-pink-900 text-sm rounded-lg focus:ring-2
                     focus:ring-[#f7c5c5] block w-full px-3 py-2.5 shadow-sm placeholder:text-gray-600/60"
-                    placeholder="Nova descrição"
+                    placeholder="Descrição do produto"
                     required />
                 </div>
                 <div>
@@ -57,31 +56,21 @@
                     type="number" 
                     id="stock" 
                     name="stock"
-                    value="{{product.stock}}"
                     aria-describedby="helper-text-explanation" 
                     class="bg-[#eae9dd] text-pink-900 text-sm rounded-lg focus:ring-2
                     focus:ring-[#f7c5c5] block w-full px-3 py-2.5 shadow-sm placeholder:text-gray-600/60" 
-                    placeholder="Novo estoque" 
+                    placeholder="Estoque" 
                     required />
                 </div>
                 <div class="flex items-center">
-                    <input 
-                    {% if product.is_active %}
-                        checked
-                    {% endif %}
-                    id="is-active" 
-                    name="is-active" 
-                    type="checkbox" 
-                    value="1" 
-                    class="w-4 h-4 rounded-xs bg-[#eae9dd] focus:ring-2 focus:ring-[#f7c5c5]">
+                    <input checked id="is-active" name="is-active" type="checkbox" value="1" class="w-4 h-4 rounded-xs bg-[#eae9dd] focus:ring-2 focus:ring-[#f7c5c5]">
                     <label for="is-active" class="select-none ms-2 text-sm font-medium font-serif">Disponível</label>
                 </div>
                 <div>
-                    <label class="block mb-2.5 text-sm font-medium font-serif" for="image">Carregar foto</label>
+                    <label class="block mb-2.5  text-sm font-medium font-serif" for="image">Carregar foto</label>
                     <input class="cursor-pointer bg-[#eae9dd] focus:ring-[#f7c5c5] focus:ring-2 text-sm rounded-lg focus:ring-brand focus:border-brand block w-full shadow-xs placeholder:text-body" aria-describedby="image" id="image" name="image" type="file" accept=".jpg,.jpeg">
                     <p class="mt-1 text-sm text-gray-600 dark:text-gray-600" id="image">JPG, JPEG (MAX. 800x800px).</p>
                 </div>
-                <input type="hidden" name="product-id" value="{{product.id}}">
                 <div class="flex justify-center">
                     <button
                         type="submit"

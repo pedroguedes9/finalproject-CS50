@@ -1,3 +1,6 @@
+import os
+import uuid
+from PIL import Image
 from flask import Blueprint, request, render_template, redirect, url_for, flash
 from flask_login import login_required
 from sqlalchemy.exc import IntegrityError
@@ -7,75 +10,123 @@ from decimal import Decimal, InvalidOperation
 
 products_bp = Blueprint("products", __name__, template_folder="templates")
 
-@products_bp.route("/", methods = ["GET", "POST"])
+ALLOWED_EXTENSIONS = {'.jpg', '.jpeg'}
+def allowed_file(filename):
+    ext = os.path.splitext(filename)[1].lower()
+    return ext in ALLOWED_EXTENSIONS
+
+@products_bp.route("/", methods = ["GET"])
 @login_required
 def products():
+    products = Products.query.all()
+    return render_template("products.html", products=products)
+
+@products_bp.route("/create", methods = ["POST", "GET"])
+@login_required
+def create_product():
     if request.method == "POST":
         name = request.form.get("name", "").strip()
         if name == "":
             flash("Nome do produto não foi fornecido.", "error")
-            return redirect(url_for('products.products'))
+            return redirect(url_for('products.create_product'))
         if len(name) > 30:
             flash("Nome grande demais. Limite de 30 caracteres.", "error")
-            return redirect(url_for('products.products'))
+            return redirect(url_for('products.create_product'))
 
         price = request.form.get("price", "").strip()
         if price == "":
             flash("O preço do produto não foi fornecido.", "error")
-            return redirect(url_for('products.products'))
+            return redirect(url_for('products.create_product'))
         try:
             price = Decimal(price)
         except InvalidOperation:
             flash("O preço do produto deve ser um número.", "error")
-            return redirect(url_for('products.products'))
+            return redirect(url_for('products.create_product'))
         if price < 0:
             flash("O preço não pode ser um número negativo.","error")
-            return redirect(url_for('products.products'))
+            return redirect(url_for('products.create_product'))
 
         description = request.form.get("description", "").strip()
 
         category_id = request.form.get("category-id", "")
         if category_id == "" or category_id == "0":
             flash("A categoria do produto não foi fornecida", "error")
-            return redirect(url_for('products.products'))
+            return redirect(url_for('products.create_product'))
         try: 
             category_id = int(category_id)
         except ValueError:
             flash("O id da categoria do produto deve ser um número", "error")
-            return redirect(url_for('products.products'))
+            return redirect(url_for('products.create_product'))
         if category_id < 1:
             flash("O id da categoria do produto deve ser maior que 0", "error")
-            return redirect(url_for('products.products'))
+            return redirect(url_for('products.create_product'))
         if not Categories.query.filter_by(id=category_id).first():
-            flash("A categoria inserida não existe", "")
-            return redirect(url_for('products.products'))
-
+            flash("A categoria inserida não existe", "error")
+            return redirect(url_for('products.create_product'))
 
         stock = request.form.get("stock","")
         if stock == "":
             flash("O estoque do produto não foi fornecido", "error")
-            return redirect(url_for('products.products'))
+            return redirect(url_for('products.create_product'))
         try: 
             stock = int(stock)
         except ValueError:
             flash("O estoque deve ser um número", "error")
-            return redirect(url_for('products.products'))
+            return redirect(url_for('products.create_product'))
         if stock < 0:
             flash("O estoque não pode ser um número negativo", "error")
-            return redirect(url_for('products.products'))
+            return redirect(url_for('products.create_product'))
 
         is_active = "is-active" in request.form
 
-        image = request.form.get("image").strip()
+        image = request.files.get("image")
+        image_path = None
+        upload_folder = os.path.join(os.path.dirname(__file__), '..', '..', 'static', 'uploads')
+        upload_folder = os.path.abspath(upload_folder)
+        if not os.path.exists(upload_folder):
+            os.makedirs(upload_folder)
 
-        new_product = Products(name=name, price=price, description=description, category_id=category_id, stock=stock, is_active=is_active, image=image)
+        if image and image.filename != "":
+            if not allowed_file(image.filename):
+                flash("Apenas arquivos JPG ou JPEG são permitidos.", "error")
+                return redirect(url_for('products.create_product'))
+            
+            #verifica tamanho do arquivo
+            image.seek(0, os.SEEK_END)
+            size = image.tell()
+            image.seek(0)
+            if size > 2 * 1024 * 1024: #2MB
+                flash("A imagem deve ter no máximo 2MB.", "error")
+                return redirect(url_for('products.create_product'))
+
+            img = Image.open(image)
+            width, height = img.size
+            if width > 800 or height > 800:
+                flash("A imagem deve ter no máximo 800x800 pixels.", "error")
+                return redirect(url_for('products.create_product'))
+
+            ext = os.path.splitext(image.filename)[1]
+            unique_filename = f"{uuid.uuid4().hex}{ext}"
+            image_path = f"static/uploads/{unique_filename}"
+            image.seek(0)
+            image.save(os.path.join(upload_folder, unique_filename))
+
+        new_product = Products(
+                name=name, 
+                price=price, 
+                description=description, 
+                category_id=category_id, 
+                stock=stock, 
+                is_active=is_active, 
+                image=image_path
+            )
         db.session.add(new_product)
         db.session.commit()
         return redirect(url_for('products.products'))
     else:
-        products = Products.query.all()
         categories = Categories.query.all()
-        return render_template("products.html", products=products, categories=categories)
+        return render_template("create.html", categories=categories)
+
 
 @products_bp.route("/delete", methods = ["POST"])
 @login_required
@@ -97,6 +148,13 @@ def delete_product():
     if not product:
         flash("O produto que você está tentando deletar não existe", "error")
         return redirect(url_for('products.products'))
+    
+    if product.image:
+        image_path = os.path.join(os.path.dirname(__file__), '..', '..', product.image)
+        image_path = os.path.abspath(image_path)
+        if os.path.exists(image_path):
+            os.remove(image_path)
+
     db.session.delete(product)
     try:
         db.session.commit()
@@ -197,12 +255,45 @@ def edit_product():
             product.is_active = is_active
             changed = True
 
-        image = request.form.get("image","").strip()
-        current_image = product.image or ""
-        if current_image != image:
-            product.image = image
-            changed = True
+        image = request.files.get("image")
+        if image and image.filename != "":
+            if not allowed_file(image.filename):
+                flash("Apenas arquivos JPG ou JPEG são permitidos.","error")
+                return redirect(url_for('products.edit_product', id=product_id))
         
+        # Exclui imagem antiga
+            if product.image:
+                old_image_path = os.path.join(os.path.dirname(__file__), '..', '..', product.image)
+                old_image_path = os.path.abspath(old_image_path)
+                if os.path.exists(old_image_path):
+                    os.remove(old_image_path)
+
+            # Salva nova imagem
+            image.seek(0, os.SEEK_END)
+            size = image.tell()
+            image.seek(0)
+            if size > 2 * 1024 * 1024:
+                flash("A imagem deve ter no máximo 2MB.", "error")
+                return redirect(url_for('products.edit_product', id=product_id))
+            
+            img = Image.open(image)
+            width, height = img.size
+            if width > 800 or height > 800:
+                flash("A imagem deve ter no máximo 800x800 pixels.", "error")
+                return redirect(url_for('products.edit_product', id=product_id))
+            
+            ext = os.path.splitext(image.filename)[1]
+            unique_filename = f"{uuid.uuid4().hex}{ext}"
+            upload_folder = os.path.join(os.path.dirname(__file__), '..', '..', 'static', 'uploads')
+            upload_folder = os.path.abspath(upload_folder)
+            if not os.path.exists(upload_folder):
+                os.makedirs(upload_folder)
+            image_path = f"static/uploads/{unique_filename}"
+            image.seek(0)
+            image.save(os.path.join(upload_folder, unique_filename))
+            product.image = image_path
+            changed = True
+
         if not changed:
             flash("Nenhuma alteração foi feita", "info")
             return redirect(url_for('products.edit_product', id=product_id))

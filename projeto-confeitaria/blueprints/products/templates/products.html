@@ -1,65 +1,63 @@
 {% extends "layout.html" %}
+{% block title%}Produtos{%endblock%}
 {% block main %}
-    <h1>Produtos</h1>
-    <h2>Adicionar produto</h2>
-    <form action="{{ url_for('products.products') }}" method="post" >
-        <div class="flex justify-center mt-6">
-            <div class="space-y-12 max-w-md w-full mx-auto">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                <div class="mb-12">
-                    <label for="name" class="block mb-2.5 text-sm font-medium font-serif text-[#373831]">Nome:</label>
-                    <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    aria-describedby="helper-text-explanation" 
-                    class="bg-[#eae9dd] text-pink-900 text-sm
-                    rounded-lg focus:ring-2 focus:ring-[#f7c5c5] block w-full px-3 py-2.5 shadow-sm placeholder:text-gray-600/60"
-                    placeholder="Nome do produto"
-                    required />
-                </div>
-                <div>
-                    <label for="price" class="block mb-2.5 text-sm font-medium text-heading">Selecione um preço:</label>
-                    <input 
-                    type="number" 
-                    id="price" 
-                    name="price"
-                    aria-describedby="helper-text-explanation" 
-                    class="bg-[#eae9dd] text-pink-900 text-sm rounded-lg focus:ring-2
-                    focus:ring-[#f7c5c5] block w-full px-3 py-2.5 shadow-sm placeholder:text-gray-600/60" 
-                    placeholder="R$" 
-                    required />
-                </div>
-                <div class="mb-12">
-                    <label for="description" class="block mb-2.5 text-sm font-medium font-serif text-[#373831]">Descrição:</label>
-                    <input
-                    type="text"
-                    id="description"
-                    name="description"
-                    class="bg-[#eae9dd] text-pink-900 text-sm rounded-lg focus:ring-2
-                    focus:ring-[#f7c5c5] block w-full px-3 py-2.5 shadow-sm placeholder:text-gray-600/60"
-                    placeholder="Descrição do produto"
-                    required />
-                </div>
-                <select name="category-id" id="categories">
-                    <option selected disabled value="0">categorias</option>
-                    {% for category in categories %}
-                        <option value="{{category.id}}">{{category.name}}</option>
-                    {% endfor %}
-                </select>
-                <input type="number" name="stock" placeholder="estoque">
-                <label>
-                    <span>Disponibilidade:</span>
-                    <input type="checkbox" name="is-active" value="1">
-                </label>
-                <input type="text" name="image" placeholder="imagem">
-                <button type="submit">Adicionar produto</button>
-            </div>
-        </div>
-    </form>
+    <h1 class="text-center font-bold font-serif text-3xl mt-3">Produtos</h1>
     {% if not products %}
         <p>Não há nenhum produto criado ainda.</p>
     {% else %}
+        <div class="grid grid-cols-1 gap-5 justify-items-center">
+            {% for product in products %}
+                <div class="w-full max-w-82 md:max-w-lg bg-neutral-primary-soft p-6 border border-default rounded-base shadow-xs h-84">
+                    <a href="#">
+                        <img class="rounded-base mb-6" src="/{{product.image}}" alt="{{product.name}}" />
+                    </a>
+                    <div>
+                        <div class="flex flex-row gap-2">
+                            <a href="#">
+                                <h5 class="text-xl text-heading font-semibold tracking-tight">{{product.name}}</h5>
+                            </a>
+                            <span class="bg-pink-500 text-black rounded-lg px-2">{{product.category.name}}</span>
+                        </div>
+                        <p>{{product.description}}</p>
+                        <div class="flex flex-col mt-4">
+                            <span>No estoque: {{product.stock}}</span>
+                            <div class="flex items-center justify-between">
+                                <span class="text-3xl font-extrabold text-heading">R${{product.price}}</span>
+                                <form action="{{url_for('cart.add_to_cart')}}">
+                                    <div class="flex flex-col justify-end items-end">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                        <input type="hidden" value="{{product.id}}" name="id">
+                                        <label>
+                                            Quantidade:
+                                            <input type="number" name="quantity" value="1" class="w-10"></label>
+                                        <button type="button" class="inline-flex items-center  text-black bg-brand hover:bg-brand-strong box-border border border-transparent focus:ring-4 focus:ring-brand-medium shadow-xs font-medium leading-5 rounded-base text-sm px-3 py-2 focus:outline-none">
+                                            <svg class="w-4 h-4 me-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 4h1.5L9 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-8.5-3h9.25L19 7H7.312"/></svg>
+                                            Add to cart
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="flex flex-row justify-between mt-3">
+                            <div>
+                                <form action="{{url_for('products.edit_product')}}" method="get">
+                                    <input type="hidden" value="{{product.id}}" name="id">
+                                    <button type="submit">Editar</button>
+                                </form>
+                            </div>
+                            <div>
+                                <form action="{{url_for('products.delete_product')}}" method="post">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <input type="hidden" value="{{product.id}}" name="id">
+                                    <button type="submit" onclick="return confirm('Tem certeza que quer deletar este produto?')">Excluir</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
         <table>
             <thead>
                 <th>Nome</th>
@@ -79,7 +77,9 @@
                     <td style="border: 1px solid black;">{{product.category.name}}</td>
                     <td style="border: 1px solid black;">{{product.stock}}</td>
                     <td style="border: 1px solid black;">{{product.is_active}}</td>
-                    <td style="border: 1px solid black;">{{product.image}}</td>
+                    <td style="border: 1px solid black;">
+                        <img src="/{{product.image}}" alt="{{product.name}}">
+                    </td>
                     <td>
                         <form action="{{url_for('cart.add_to_cart')}}" method="post">
                             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">

@@ -124,7 +124,7 @@ def profile():
 
         if not changed:
             flash("Nenhuma alteração no perfil foi feita", "info")
-            return redirect(url_for('index'))
+            return redirect(url_for('auth.profile'))
         
         try: 
             db.session.commit()

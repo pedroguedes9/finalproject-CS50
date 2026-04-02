@@ -13,24 +13,26 @@
         <nav class="bg-[#D4A5A5]/80 backdrop-blur-md shadow-xl shadow-[#815a5b]/10">
             <div class="flex flex-wrap items-center justify-between max-w-7xl p-4 mx-auto">
                 <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
-                    <img src="https://flowbite.com/docs/images/logo.svg" class="h-7" alt="Flowbite Logo" />
-                    <span class="self-center text-xl font-semibold text-pink-900 whitespace-nowrap">Flowbite</span>
+                    <button class="block sm:hidden">Menu</button>
+                    <img src="https://flowbite.com/docs/images/logo.svg" class="h-7 ml-14 sm:ml-0" alt="Flowbite Logo" />
+                    <span class="hidden sm:block self-center text-xl font-semibold text-pink-900 whitespace-nowrap">Flowbite</span>
                 </a>
-                <div class="flex items-center space-x-6 rtl:space-x-reverse">
-                    
-                    {% if current_user.is_authenticated %}
-                        <a href="tel:5541251234" class="text-sm text-gray-700 hover:underline">{{current_user.phone_number}}</a>
-                        <a href="{{url_for('cart.cart')}}" class="text-sm font-medium text-pink-700 hover:underline">Carrinho</a>
-                        <a href="{{url_for('auth.profile')}}" class="text-sm font-medium text-pink-700 hover:underline">Perfil</a>
-                    {% else %}
-                        <a href="{{url_for('auth.login')}}" class="text-sm font-medium text-pink-700 hover:underline">Entrar</a>
-                        <a href="{{url_for('auth.register')}}" class="text-sm font-medium text-pink-700 hover:underline">Registrar</a>
-                    {% endif %}
+                <div class="flex items-center space-x-6">
+                    <a href="tel:5541251234" class="text-sm text-gray-700 hover:underline">{{current_user.phone_number}}</a>
+                    <div class="hidden sm:flex sm:items-center sm:space-x-6 sm:rtl:space-x-reverse">
+                        {% if current_user.is_authenticated %}
+                            <a href="{{url_for('cart.cart')}}" class="text-sm font-medium text-pink-700 hover:underline">Carrinho</a>
+                            <a href="{{url_for('auth.profile')}}" class="text-sm font-medium text-pink-700 hover:underline">Perfil</a>
+                        {% else %}
+                            <a href="{{url_for('auth.login')}}" class="text-sm font-medium text-pink-700 hover:underline">Entrar</a>
+                            <a href="{{url_for('auth.register')}}" class="text-sm font-medium text-pink-700 hover:underline">Registrar</a>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </nav>
-        <nav class="bg-[#FAF7F2]">
-            <div class="max-w-7xl px-4 py-3 mx-auto">
+        <nav class="bg-[#FAF7F2] ">
+            <div class=" hidden sm:block max-w-7xl px-4 py-3 mx-auto">
                 <div class="flex items-center">
                     <ul class="flex flex-row gap-8 mt-0 text-sm font-medium rtl:space-x-reverse">
                         <li>
@@ -38,6 +40,9 @@
                         </li>
                         <li>
                             <a href="{{ url_for('products.products')}}" class="text-pink-900 hover:underline">Produtos</a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('products.create_product')}}" class="text-pink-900 hover:underline">Criar um produto</a>
                         </li>
                         <li>
                             <a href="{{ url_for('categories.categories')}}" class="text-pink-900 hover:underline">Categorias</a>

@@ -18,7 +18,7 @@ def allowed_file(filename):
 @products_bp.route("/", methods = ["GET"])
 @login_required
 def products():
-    products = Products.query.all()
+    products = Products.query.order_by(Products.is_active.desc(), Products.id.asc()).all()
     return render_template("products.html", products=products)
 
 @products_bp.route("/create", methods = ["POST", "GET"])

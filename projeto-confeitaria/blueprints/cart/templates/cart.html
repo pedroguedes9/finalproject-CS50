@@ -4,6 +4,38 @@
     {% if not cart_items%}
         <p>Seu carrinho está vazio</p>
     {% else %}
+        <div class="grid grid-cols-1 gap-5 justify-items-center mt-5 mb-5">
+            {% for item in cart_items %}
+                <div class="w-full max-w-82 md:max-w-lg bg-neutral-primary-soft p-6 border border-default rounded-base shadow-xs  h-84 hover:-translate-y-2 hover:border hover:border-pink-500 hover:shadow-md transition duration-150">
+                    <a href="#">
+                        <img class="rounded-base mb-6" src="/{{item.product.image}}" alt="{{item.product.name}}" />
+                    </a>
+                    <div>
+                        <div class="flex flex-row gap-4">
+                            <a href="#">
+                                <h5 class="text-xl text-heading font-semibold tracking-tight first-letter:uppercase">{{item.product.name}}</h5>
+                            </a>
+                            <span class="bg-pink-500/50 text-black rounded-lg px-2 flex justify-center items-center">{{item.product.category.name}}</span>
+                        </div>
+                        <p class="first-letter:uppercase">{{item.product.description}}</p>
+                        <div class="flex flex-col mt-4">
+                            <span>Quantidade: {{item.product.stock}}</span>
+                            <div class="flex items-center justify-between">
+                                <span class="text-3xl font-extrabold text-heading">R${{item.product.price}}</span>
+                            </div>
+                            <div class="flex justify-end items-end">
+                                <form action="{{url_for('cart.remove_from_cart')}}" method="post">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <input type="hidden" name="id" value="{{item.id}}">
+                                    <input type="hidden" name="user-id" value="{{user_id}}">
+                                    <button type="submit" class="bg-pink-500 py-2 px-1 rounded-lg ">Remover do carrinho</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
         <table>
             <thead>
                 <th>Nome</th>
@@ -25,7 +57,7 @@
                         <td style="border: 1px solid black;">{{item.product.category.name}}</td>
                         <td style="border: 1px solid black;">{{item.product.stock}}</td>
                         <td style="border: 1px solid black;">{{item.product.is_active}}</td>
-                        <td style="border: 1px solid black;">{{item.product.image}}</td>
+                        <td style="border: 1px solid black;"><img src="/{{item.product.image}}" alt="{{item.product.name}}"></td>
                         <td style="border: 1px solid black;">
                             <form action="{{url_for('cart.remove_from_cart')}}" method="post">
                                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">

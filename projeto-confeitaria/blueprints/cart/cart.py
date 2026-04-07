@@ -57,7 +57,7 @@ def add_to_cart():
         new_cart_item = CartItems(user_id=user_id, product_id=product_id, quantity=quantity)
         db.session.add(new_cart_item)
     db.session.commit()
-    return redirect(url_for("products.products"))
+    return redirect(url_for("cart.cart"))
 
 @cart_bp.route("/", methods=["GET"])
 @login_required

@@ -1,48 +1,67 @@
 {% extends "layout.html" %}
 {% block main %}
-    <h1>Carrinho</h1>
+    <h1 class="text-center font-bold font-serif text-3xl"> Carrinho</h1>
     {% if not cart_items%}
-        <p>Seu carrinho está vazio</p>
+        <p class="mt-6 mx-auto max-w-md rounded-xl border border-[#D4A5A5] bg-[#FDF4F4] px-5 py-4 text-center text-[#5F4344] font-medium shadow-sm">Seu carrinho está vazio</p>
     {% else %}
-        <table>
-            <thead>
-                <th>Nome</th>
-                <th>Preco</th>
-                <th>Descricao</th>
-                <th>Quantidade</th>
-                <th>Categoria</th>
-                <th>Estoque</th>
-                <th>Ativo</th>
-                <th>Imagem</th>
-            </thead>
-            <tbody>
-                {% for item in cart_items %}
-                    <tr style="border: 1px solid black;">
-                        <td style="border: 1px solid black;">{{item.product.name}}</td>
-                        <td style="border: 1px solid black;">{{item.product.price}}</td>
-                        <td style="border: 1px solid black;">{{item.product.description}}</td>
-                        <td style="border: 1px solid black;">{{item.quantity}}</td>
-                        <td style="border: 1px solid black;">{{item.product.category.name}}</td>
-                        <td style="border: 1px solid black;">{{item.product.stock}}</td>
-                        <td style="border: 1px solid black;">{{item.product.is_active}}</td>
-                        <td style="border: 1px solid black;">{{item.product.image}}</td>
-                        <td style="border: 1px solid black;">
-                            <form action="{{url_for('cart.remove_from_cart')}}" method="post">
-                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                                <input type="hidden" name="id" value="{{item.id}}">
-                                <input type="hidden" name="user-id" value="{{user_id}}">
-                                <button type="submit">Remover do carrinho</button>
-                            </form>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <p>Preco total: {{total_price}}</p>
-        <form action="{{url_for('orders.checkout')}}" method="post">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <input type="hidden" name="user-id" value="{{user_id}}">
-            <button type="submit">Finalizar compra</button>
-        </form>
+        <div class="grid grid-cols-1 gap-5 justify-items-center mt-5 mb-5">
+            {% for item in cart_items %}
+                <div class="w-full max-w-82 md:max-w-lg bg-neutral-primary-soft p-6 border border-default rounded-base shadow-xs  h-84 hover:-translate-y-2 hover:border hover:border-pink-500 hover:shadow-md transition duration-150">
+                    <a href="#">
+                        <img class="rounded-base mb-6" src="/{{item.product.image}}" alt="{{item.product.name}}" />
+                    </a>
+                    <div>
+                        <div class="flex flex-row gap-4">
+                            <a href="#">
+                                <h5 class="text-xl text-heading font-semibold tracking-tight first-letter:uppercase">{{item.product.name}}</h5>
+                            </a>
+                            <span class="bg-pink-500/50 text-black rounded-lg px-2 flex justify-center items-center">{{item.product.category.name}}</span>
+                        </div>
+                        <p class="first-letter:uppercase">{{item.product.description}}</p>
+                        <div class="flex flex-col mt-4">
+                            <div class="flex flex-row gap-2">
+                                <span>Quantidade: {{item.quantity}}</span>
+                                <form action="{{url_for('cart.add_to_cart')}}" method="post">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <input type="hidden" value="{{item.product.id}}" name="id">
+                                    <input type="hidden" value="1" name="quantity">
+                                    <button 
+                                    class=" inline-flex h-6 w-6 text-center items-center justify-center rounded-full bg-[#815a5b]
+                                    text-white text-lg leading-none p-0  font-bold shadow-md transition hover:bg-[#a97c7d] 
+                                    hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 
+                                    focus:ring-[#f7c5c5] " 
+                                    type="submit">
+                                        <span class="-translate-y-[1px]">+</span>
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-3xl font-extrabold text-heading">R${{item.product.price}}</span>
+                            </div>
+                            <div class="flex justify-end items-end">
+                                <form action="{{url_for('cart.remove_from_cart')}}" method="post">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <input type="hidden" name="id" value="{{item.id}}">
+                                    <input type="hidden" name="user-id" value="{{user_id}}">
+                                    <button type="submit" class="bg-pink-500 py-2 px-1 rounded-lg hover:bg-pink-400 transition duration-300">Remover do carrinho</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            <p class="mt-4 mb-2 inline-flex items-center gap-2 rounded-full border border-[#815a5b]/30 bg-[#815a5b]/10 px-4 py-2 text-base font-semibold text-[#5f3f40]">
+                <span class="text-sm font-medium uppercase -tracking-wide text-[#815a5b]">Total</span>
+                <span class="text-xl font-extrabold">R$ {{total_price}}</span>
+            </p>
+            <div>
+                <form action="{{url_for('orders.checkout')}}" method="post">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="user-id" value="{{user_id}}">
+                    <button type="submit" class="text-white bg-[#815a5b] hover:bg-[#a97c7d] shadow-xl shadow-[#815a5b]/5 transition duration-300 focus:ring-2 focus:ring-[#f7c5c5]
+                        font-medium leading-5 rounded-full text-md px-10 py-5 focus:outline-none mt-6">Finalizar compra</button>
+                </form>
+            </div>
+        </div>
     {% endif %}
 {% endblock %}

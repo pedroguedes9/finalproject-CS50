@@ -1,39 +1,46 @@
 {% extends "layout.html" %}
+{% block title %}Pedidos{%endblock%}
 {% block main %}
-    <h1>Pedidos</h1>
+    <h2 class="font-semibold text-2xl text-center">Histórico de Pedidos</h2>
     {% if not orders %}
         <p>Você não tem nenhum pedido</p>
     {% else %}
-        {% for order in orders %}
-            <h3>Pedido: {{loop.index}}</h3>
-            <table>
-                <thead>
-                    <th>Nome do produto</th>
-                    <th>Preco</th>
-                    <th>Descricao</th>
-                    <th>Categoria</th>
-                    <th>Imagem</th>
-                    <th>Quantidade</th>
-                </thead>
-                <tbody>
-                    {% for order_item in order.items %}
-                        <tr>
-                            <td style="border: 1px solid black;">{{order_item.product.name}}</td>
-                            <td style="border: 1px solid black;">{{order_item.price}}</td>
-                            <td style="border: 1px solid black;">{{order_item.product.description}}</td>
-                            <td style="border: 1px solid black;">
-                                {% if order_item.product.category %}
-                                    {{order_item.product.category.name}}
-                                {% endif %}
-                            </td>
-                            <td style="border: 1px solid black;">{{order_item.product.image}}</td>
-                            <td style="border: 1px solid black;">{{order_item.quantity}}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            <p>Total do pedido: {{order.total_price}}</p>
-            <p>Status: {{order.status}}</p>
-        {% endfor %}
+        <div class="flex flex-col gap-5 justify-center items-center ">
+            {% for order in orders %}
+                <div class="max-w-3xl w-full bg-[#FFF8F8] p-6 border border-[#E6D3D3] rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-0.5 transition">
+                    <div class="flex flex-row justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold text-[#3F2D2E]">Pedido: {{loop.index}}</h3>
+                        <span class="text-sm text-[#6B4B4C]">Status: {{order.status}}</span>
+                    </div>
+                    <div class="grid gap-4">
+                        {% for order_item in order.items %}
+                            <div class="w-full bg-white/60 p-4 border border-[#E6D3D3] rounded-xl">
+                                <div class="flex flex-row gap-4">
+                                    <img class="w-24 h-24 object-cover rounded-xl border border-[#E6D3D3]" src="/{{order_item.product.image}}" alt="{{order_item.product.name}}" >
+                                    <div class="flex-1">
+                                        <div class="flex flex-row items-center gap-3">
+                                            <h5 class="text-lg font-semibold text-[#3F2D2E] first-letter:uppercase">{{order_item.product.name}} </h5>
+                                            {% if order_item.product.category %}
+                                                <span class="bg-[#EED7D8] text-[#5F4344] rounded-full px-3 py-1 text-xs font-semibold">
+                                                    {{order_item.product.category.name}}
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                        <p class="text-sm text-[#6B4B4C] mt-2 first-letter:uppercase">{{order_item.product.description}}</p>
+                                        <div class="flex items-center justify-between mt-4">
+                                            <span class="text-sm text-[#6B4B4C]">Quantidade: {{order_item.quantity}}</span>
+                                            <span class="text-xl font-extrabold text-[#3F2D2E]">R${{order_item.price}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="mt-4 flex justify-end">
+                        <span class="text-base font-semibold text-[#3F2D2E]">Total: R${{order.total_price}}</span>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     {% endif %}
 {% endblock %}

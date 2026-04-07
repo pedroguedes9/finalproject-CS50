@@ -76,3 +76,54 @@ def edit_category():
         db.session.rollback()
         return redirect(url_for('categories.categories'))
     return redirect(url_for('categories.categories'))
+
+@categories_bp.route("/delete", methods=["POST"])
+@login_required
+def delete_category():
+    category_id = request.form.get("category-id","")
+    if category_id == "":
+        flash("Por favor, forneça o id da categoria.", "error")
+        return redirect(url_for('categories.categories'))
+    try:
+        category_id = int(category_id)
+    except:
+        flash("O id da categoria deve ser um número", "error")
+        return redirect(url_for('categories.categories'))
+    if category_id < 1:
+        flash("O id da categoria não pode ser menor que 1")
+        return redirect(url_for('categories.categories'))
+    
+    category = Categories.query.filter_by(id=category_id).first()
+    if not category:
+        flash("A categoria que você está tentando deletar não existe", "error")
+        return redirect(url_for('categories.categories'))
+    
+    if category.name == "sem categoria":
+        flash("A categoria que você está tentando excluir não pode ser excluída", "error")
+        return redirect(url_for('categories.categories'))
+
+    without_category = Categories.query.filter_by(name="sem categoria").first()
+    if not without_category:
+        without_category = Categories(name="sem categoria")
+        db.session.add(without_category)
+        db.session.flush()
+
+    if Products.query.filter_by(category_id=category_id).count() > 0:
+        flash('Já existem produtos com essa categoria, então eles agora estão "Sem categoria"', "info")
+
+    # Update em massa: move TODOS os produtos da categoria atual para "sem categoria"
+    Products.query.filter_by(category_id=category_id).update(
+        {"category_id": without_category.id},
+        synchronize_session=False
+    )
+
+    db.session.delete(category)
+
+    try:
+        db.session.commit()
+    except IntegrityError:
+        db.session.rollback()
+        flash("Não é possível excluir essa categoria pois ela já está em algum produto", "error")
+        return redirect(url_for('categories.categories'))
+    
+    return redirect(url_for('categories.categories'))

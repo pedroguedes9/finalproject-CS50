@@ -3,54 +3,105 @@
 {% block main %}
     <h1 class="text-center font-bold font-serif text-3xl mt-3">Produtos</h1>
     {% if not products %}
-        <p>Não há nenhum produto criado ainda.</p>
+        <p class="mt-6 mx-auto max-w-md rounded-xl border border-[#D4A5A5] bg-[#FDF4F4] px-5 py-4 text-center text-[#5F4344] font-medium shadow-sm">Não há nenhum produto criado ainda.</p>
     {% else %}
-        <div class="grid grid-cols-1 gap-5 justify-items-center">
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-y-5 xl:gap-x-4 max-w-10xl justify-items-center mt-5 mb-5">
             {% for product in products %}
-                <div class="w-full max-w-82 md:max-w-lg bg-neutral-primary-soft p-6 border border-default rounded-base shadow-xs h-84">
+                <div class="w-full max-w-82 md:max-w-lg bg-neutral-primary-soft p-6 border border-default rounded-base shadow-xs  h-84 hover:-translate-y-2 hover:border hover:border-pink-500 hover:shadow-md transition duration-150">
                     <a href="#">
                         <img class="rounded-base mb-6" src="/{{product.image}}" alt="{{product.name}}" />
                     </a>
                     <div>
-                        <div class="flex flex-row gap-2">
+                        <div class="flex flex-row gap-4">
                             <a href="#">
-                                <h5 class="text-xl text-heading font-semibold tracking-tight">{{product.name}}</h5>
+                                <h5 class="text-xl text-heading font-semibold tracking-tight first-letter:uppercase">{{product.name}}</h5>
                             </a>
-                            <span class="bg-pink-500 text-black rounded-lg px-2">{{product.category.name}}</span>
+                            <span class="bg-pink-500/50 text-black rounded-lg px-2 flex justify-center items-center">{{product.category.name}}</span>
                         </div>
-                        <p>{{product.description}}</p>
+                        <p class="first-letter:uppercase">{{product.description}}</p>
                         <div class="flex flex-col mt-4">
                             <span>No estoque: {{product.stock}}</span>
                             <div class="flex items-center justify-between">
                                 <span class="text-3xl font-extrabold text-heading">R${{product.price}}</span>
-                                <form action="{{url_for('cart.add_to_cart')}}">
-                                    <div class="flex flex-col justify-end items-end">
+                                <form action="{{url_for('cart.add_to_cart')}}" method="post">
+                                    <div class="flex flex-col justify-center items-center  gap-3">
                                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                         <input type="hidden" value="{{product.id}}" name="id">
-                                        <label>
-                                            Quantidade:
-                                            <input type="number" name="quantity" value="1" class="w-10"></label>
-                                        <button type="button" class="inline-flex items-center  text-black bg-brand hover:bg-brand-strong box-border border border-transparent focus:ring-4 focus:ring-brand-medium shadow-xs font-medium leading-5 rounded-base text-sm px-3 py-2 focus:outline-none">
+                                        <label class="">
+                                            <span class="inline-flex items-center rounded-full bg-[#EED7D8] px-3 py-1 text-sm font-semibold uppercase tracking-wide text-[#5F4344] shadow-white">Quantidade:</span>
+                                            <input type="text" name="quantity" value="1" inputmode="numeric" class="only-numbers bg-[#F6EDEE] border border-[#D4A5a5] text-[#5F4344] focus:ring-2 focus:ring-[#BF9191] rounded-md px-2 py-1 focus:outline-none w-12"></label>
+                                        <button type="submit" class="inline-flex items-center bg-[#D4A5A5] text-white hover:bg-[#BF9191] rounded-full shadow-xl shadow-[#815a5b]/5 focus:ring-2 focus:ring-[#f7c5c5] font-medium leading-5 text-sm px-6 py-5 ">
                                             <svg class="w-4 h-4 me-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 4h1.5L9 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-8.5-3h9.25L19 7H7.312"/></svg>
-                                            Add to cart
+                                            Adicionar ao carrinho
                                         </button>
                                     </div>
                                 </form>
                             </div>
                         </div>
-                        <div class="flex flex-row justify-between mt-3">
-                            <div>
-                                <form action="{{url_for('products.edit_product')}}" method="get">
+                        <div class="flex flex-row justify-between mt-3 ">
+                            <div class="bg-pink-500/50 hover:bg-pink-600/50 shadow-md hover:shadow-lg rounded-lg transition duration-300 text-black      ">
+                                <form action="{{url_for('products.edit_product')}}" class="w-full" method="get">
                                     <input type="hidden" value="{{product.id}}" name="id">
-                                    <button type="submit">Editar</button>
+                                    <button type="submit" class="w-full px-3 py-1">Editar</button>
                                 </form>
                             </div>
-                            <div>
-                                <form action="{{url_for('products.delete_product')}}" method="post">
+                            <div class="bg-[#b91c1c] hover:bg-[#7d1410] shadow-md hover:shadow-lg transition duration-300  rounded-lg text-white">
+                                <form id="delete-form-{{ product.id }}" action="{{url_for('products.delete_product')}}" method="post" class="w-full">
                                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                     <input type="hidden" value="{{product.id}}" name="id">
-                                    <button type="submit" onclick="return confirm('Tem certeza que quer deletar este produto?')">Excluir</button>
+                                    <button
+                                        type="button"
+                                        data-modal-target="popup-modal-{{ product.id }}"
+                                        data-modal-toggle="popup-modal-{{ product.id }}"
+                                        class="w-full px-3 py-1"
+                                    >
+                                        Excluir
+                                    </button>
                                 </form>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    id="popup-modal-{{ product.id }}"
+                    tabindex="-1"
+                    aria-hidden="true"
+                    class="hidden fixed inset-0 z-50 items-center justify-center bg-black/30 backdrop-blur-[2px]"
+                    >
+                    <div class="relative w-full max-w-md p-4">
+                        <div class="relative rounded-2xl border border-[#E6D3D3] bg-[#FFF8F8] p-6 shadow-sm">
+                            <button
+                                type="button"
+                                class="absolute right-3 top-3 h-9 w-9 rounded-full text-[#5F4344] hover:bg-[#F4DDDD]"
+                                data-modal-hide="popup-modal-{{ product.id }}"
+                            >
+                                <span class="sr-only">Fechar</span>
+                                ✕
+                            </button>
+
+                            <div class="text-center">
+                                <p class="text-sm uppercase tracking-wide text-[#8B6A6B]">Confirmação</p>
+                                <h3 class="mt-2 text-lg font-semibold text-[#3F2D2E]">
+                                    Excluir o produto "{{ product.name }}"?
+                                </h3>
+
+                                <div class="mt-6 flex items-center justify-center gap-3">
+                                    <button
+                                    type="submit"
+                                    form="delete-form-{{ product.id }}"
+                                    class="rounded-full bg-[#b91c1c] px-5 py-2 text-sm font-medium text-white hover:bg-[#7d1410]"
+                                    >
+                                        Sim, excluir
+                                    </button>
+                                    <button
+                                        type="button"
+                                        data-modal-hide="popup-modal-{{ product.id }}"
+                                        class="rounded-full border border-[#D4A5A5] bg-[#FDF4F4] px-5 py-2 text-sm font-medium text-[#5F4344] hover:bg-[#F4DDDD]"
+                                    >
+                                        Cancelar
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -58,53 +109,28 @@
             {% endfor %}
         </div>
 
-        <table>
-            <thead>
-                <th>Nome</th>
-                <th>Preco</th>
-                <th>Descricao</th>
-                <th>Categoria</th>
-                <th>Estoque</th>
-                <th>Ativo</th>
-                <th>Imagem</th>
-            </thead>
-            <tbody>
-                {% for product in products %}
-                <tr style="border: 1px solid black;">
-                    <td style="border: 1px solid black;" >{{product.name}}</td>
-                    <td style="border: 1px solid black;">{{product.price}}</td>
-                    <td style="border: 1px solid black;">{{product.description}}</td>
-                    <td style="border: 1px solid black;">{{product.category.name}}</td>
-                    <td style="border: 1px solid black;">{{product.stock}}</td>
-                    <td style="border: 1px solid black;">{{product.is_active}}</td>
-                    <td style="border: 1px solid black;">
-                        <img src="/{{product.image}}" alt="{{product.name}}">
-                    </td>
-                    <td>
-                        <form action="{{url_for('cart.add_to_cart')}}" method="post">
-                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                            <input type="hidden" value="{{product.id}}" name="id">
-                            Quantidade: <input type="number" name="quantity">
-                            <button type="submit">Adicionar ao carrinho</button>
-                        </form>
-                    </td>
-                    <td>
-                        <form action="{{url_for('products.delete_product')}}" method="post">
-                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                            <input type="hidden" value="{{product.id}}" name="id">
-                            <button type="submit" onclick="return confirm('Tem certeza que quer deletar este produto?')">Excluir</button>
-                        </form>
-                    </td>
-                    <td>
-                        <form action="{{url_for('products.edit_product')}}" method="get">
-                            <input type="hidden" value="{{product.id}}" name="id">
-                            <button type="submit">Editar</button>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+
+<div id="popup-modal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-md max-h-full">
+        <div class="relative bg-neutral-primary-soft border border-default rounded-base shadow-sm p-4 md:p-6">
+                <button type="button" class="absolute top-3 end-2.5 text-body bg-transparent hover:bg-neutral-tertiary hover:text-heading rounded-base text-sm w-9 h-9 ms-auto inline-flex justify-center items-center" data-modal-hide="popup-modal">
+                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18 17.94 6M18 18 6.06 6"/></svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+            <div class="p-4 md:p-5 text-center">
+                <svg class="mx-auto mb-4 text-fg-disabled w-12 h-12" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 13V8m0 8h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+                <h3 class="mb-6 text-body">Are you sure you want to delete this product from your account?</h3>
+                <div class="flex items-center space-x-4 justify-center">
+                    <button data-modal-hide="popup-modal" type="button" class="text-white bg-danger box-border border border-transparent hover:bg-danger-strong focus:ring-4 focus:ring-danger-medium shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none">
+                    Yes, I'm sure
+                    </button>
+                    <button data-modal-hide="popup-modal" type="button" class="text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading focus:ring-4 focus:ring-neutral-tertiary shadow-xs font-medium leading-5 rounded-base text-sm px-4 py-2.5 focus:outline-none">No, cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
     {% endif %}
+    
 
 {% endblock %}

@@ -10,7 +10,7 @@ from decimal import Decimal, InvalidOperation
 
 products_bp = Blueprint("products", __name__, template_folder="templates")
 
-ALLOWED_EXTENSIONS = {'.jpg', '.jpeg'}
+ALLOWED_EXTENSIONS = {'.jpg', '.jpeg', '.webp'}
 def allowed_file(filename):
     ext = os.path.splitext(filename)[1].lower()
     return ext in ALLOWED_EXTENSIONS
@@ -18,7 +18,7 @@ def allowed_file(filename):
 @products_bp.route("/", methods = ["GET"])
 @login_required
 def products():
-    products = Products.query.all()
+    products = Products.query.order_by(Products.is_active.desc(), Products.id.asc()).all()
     return render_template("products.html", products=products)
 
 @products_bp.route("/create", methods = ["POST", "GET"])
@@ -160,7 +160,7 @@ def delete_product():
         db.session.commit()
     except IntegrityError: 
         db.session.rollback()
-        flash("Não é possível excluir esse produto pois ele á está no carrinho ou no registro de pedidos de alguém", "error")
+        flash("Não é possível excluir esse produto pois ele já está no carrinho ou no registro de pedidos de alguém", "error")
         return redirect(url_for('products.products'))
     return redirect(url_for('products.products'))
 
@@ -258,7 +258,7 @@ def edit_product():
         image = request.files.get("image")
         if image and image.filename != "":
             if not allowed_file(image.filename):
-                flash("Apenas arquivos JPG ou JPEG são permitidos.","error")
+                flash("Apenas arquivos JPG, JPEG ou WEBP são permitidos.","error")
                 return redirect(url_for('products.edit_product', id=product_id))
         
         # Exclui imagem antiga

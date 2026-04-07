@@ -12,6 +12,7 @@
                     type="text"
                     id="name"
                     name="name"
+                    inputmode="text"
                     aria-describedby="helper-text-explanation" 
                     class="bg-[#eae9dd] text-pink-900 text-sm
                     rounded-lg focus:ring-2 focus:ring-[#f7c5c5] block w-full px-3 py-2.5 shadow-sm placeholder:text-gray-600/60"
@@ -21,11 +22,12 @@
                 <div>
                     <label for="price" class="block mb-2.5 text-sm font-medium font-serif text-[#373831]" >Selecione um preço:</label>
                     <input 
-                    type="number" 
+                    type="text" 
                     id="price" 
                     name="price"
+                    inputmode="decimal"
                     aria-describedby="helper-text-explanation" 
-                    class="bg-[#eae9dd] text-pink-900 text-sm rounded-lg focus:ring-2
+                    class="only-numbers bg-[#eae9dd] text-pink-900 text-sm rounded-lg focus:ring-2
                     focus:ring-[#f7c5c5] block w-full px-3 py-2.5 shadow-sm placeholder:text-gray-600/60" 
                     placeholder="R$" 
                     required />
@@ -36,6 +38,7 @@
                     type="text"
                     id="description"
                     name="description"
+                    inputmode="text"
                     class="bg-[#eae9dd] text-pink-900 text-sm rounded-lg focus:ring-2
                     focus:ring-[#f7c5c5] block w-full px-3 py-2.5 shadow-sm placeholder:text-gray-600/60"
                     placeholder="Descrição do produto"
@@ -53,11 +56,12 @@
                 <div>
                     <label for="stock" class="block mb-2.5 text-sm font-medium font-serif text-[#373831]" >Selecione um estoque:</label>
                     <input 
-                    type="number" 
+                    type="text" 
                     id="stock" 
                     name="stock"
+                    inputmode="numeric"
                     aria-describedby="helper-text-explanation" 
-                    class="bg-[#eae9dd] text-pink-900 text-sm rounded-lg focus:ring-2
+                    class="only-numbers bg-[#eae9dd] text-pink-900 text-sm rounded-lg focus:ring-2
                     focus:ring-[#f7c5c5] block w-full px-3 py-2.5 shadow-sm placeholder:text-gray-600/60" 
                     placeholder="Estoque" 
                     required />
@@ -68,8 +72,8 @@
                 </div>
                 <div>
                     <label class="block mb-2.5  text-sm font-medium font-serif" for="image">Carregar foto</label>
-                    <input class="cursor-pointer bg-[#eae9dd] focus:ring-[#f7c5c5] focus:ring-2 text-sm rounded-lg focus:ring-brand focus:border-brand block w-full shadow-xs placeholder:text-body" aria-describedby="image" id="image" name="image" type="file" accept=".jpg,.jpeg">
-                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-600" id="image">JPG, JPEG (MAX. 800x800px).</p>
+                    <input class="cursor-pointer bg-[#eae9dd] focus:ring-[#f7c5c5] focus:ring-2 text-sm rounded-lg focus:ring-brand focus:border-brand block w-full shadow-xs placeholder:text-body" aria-describedby="image" id="image" name="image" type="file" accept=".jpg,.jpeg,.webp">
+                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-600" id="image">JPG, JPEG, WEBP (MAX. 800x800px).</p>
                 </div>
                 <div class="flex justify-center">
                     <button

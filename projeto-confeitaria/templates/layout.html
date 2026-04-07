@@ -7,22 +7,51 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
     <link href="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.css" rel="stylesheet" />
+    <style>
+        [drawer-backdrop], .drawer-backdrop {
+            background:  rgba(45, 31, 28, 0.35) !important;;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 30 !important;
+        }
+    </style>
 </head>
 <body>
-    <header class="sticky top-0 z-20 w-full inset-s-0">
+    <header class="sticky top-0 z-40 w-full inset-s-0">
         <nav class="bg-[#D4A5A5]/80 backdrop-blur-md shadow-xl shadow-[#815a5b]/10">
             <div class="flex flex-wrap items-center justify-between max-w-7xl p-4 mx-auto">
-                <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
-                    <button class="block sm:hidden">Menu</button>
-                    <img src="https://flowbite.com/docs/images/logo.svg" class="h-7 ml-14 sm:ml-0" alt="Flowbite Logo" />
-                    <span class="hidden sm:block self-center text-xl font-semibold text-pink-900 whitespace-nowrap">Flowbite</span>
-                </a>
+                <div class="flex flex-row ">
+                    <button 
+                        class="block sm:hidden" 
+                        aria-controls="menu" 
+                        data-drawer-target="menu" 
+                        data-drawer-toggle="menu" 
+                        aria-expanded="false"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                        </svg>
+                    </button>
+                    <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
+                        <img src="{{ url_for('static', filename='logo2.png')}}" class="h-7 ml-6 sm:ml-0 scale-200 origin-left" alt="Logo" />
+                        <span class="hidden sm:block self-center text-xl font-semibold text-pink-900 whitespace-nowrap">Doce império</span>
+                    </a>
+                </div>
                 <div class="flex items-center space-x-6">
-                    <a href="tel:5541251234" class="text-sm text-gray-700 hover:underline">{{current_user.phone_number}}</a>
-                    <div class="hidden sm:flex sm:items-center sm:space-x-6 sm:rtl:space-x-reverse">
+                    <div class=" flex items-center space-x-6 rtl:space-x-reverse">
                         {% if current_user.is_authenticated %}
-                            <a href="{{url_for('cart.cart')}}" class="text-sm font-medium text-pink-700 hover:underline">Carrinho</a>
+                            <a href="tel:5541251234" class="hidden sm:inline text-sm text-gray-700 hover:underline">{{current_user.phone_number}}</a>
                             <a href="{{url_for('auth.profile')}}" class="text-sm font-medium text-pink-700 hover:underline">Perfil</a>
+                            <a href="{{url_for('cart.cart')}}" class="text-sm font-medium text-pink-700 hover:underline relative">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
+                                </svg>
+                                {% if current_user.cart_items|length != 0 %}
+                                    <p class="absolute text-black text-md top-3 right-5">{{current_user.cart_items|length}}</p>
+                                {% elif current_user.cart_items|length >= 99 %}
+                                    <p class="absolute text-black text-md top-3 right-5">+99</p>
+                                {% endif %}
+                            </a>
                         {% else %}
                             <a href="{{url_for('auth.login')}}" class="text-sm font-medium text-pink-700 hover:underline">Entrar</a>
                             <a href="{{url_for('auth.register')}}" class="text-sm font-medium text-pink-700 hover:underline">Registrar</a>
@@ -52,6 +81,51 @@
                         </li>
                     </ul>
                 </div>
+            </div>
+            <div 
+                class=" sm:hidden fixed top-0 left-0 h-dvh w-80 bg-[#FAF7F2] border-x-[#E8DED7] shadow-sm
+                z-40 -translate-x-full overflow-y-auto transition-transform" 
+                id="menu"
+                data-drawer-placement="left"
+                data-drawer-backdrop="true"
+                data-drawer-body-scrolling="false"
+                data-drawer-edge="true"
+                data-drawer-edge-offset="64"
+            >
+                <div class=" flex flex-col items-start justify-between px-5 py-4 border-b border-[#E8DED7]shrink-0">
+                    <h3 class="text-[#4B2E2B text-lg font-semibold ">Navegação</h3>
+                    <p class="text-[#6B4A45] text-sm uppercase tracking-widest ">Menu</p>
+                    <button 
+                        class="absolute right-3 top-3 text-[#4B2E2B] w-9 h-9 rounded-full bg-[#E8DED7] border border-[#E8DED7] flex items-center justify-center hover:bg-[#F4DDDD]  " 
+                        data-drawer-hide="menu" 
+                        aria-controls="menu" 
+                        aria-label="Fechar menu"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                            </svg>
+                    </button>
+                </div>
+                <ul class="flex flex-col flex-1 justify-between items-stretch gap-1">
+                    <li>
+                        <a href="{{ url_for('index')}}" 
+                        class="text-[#4B2E2B] text-lg shadow-sm px-5 py-3 block w-full text-left rounded-md font-medium  hover:bg-[#F4DDDD] " 
+                        aria-current="page">Home</a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('products.products')}}" class="text-[#4B2E2B] text-lg shadow-sm px-5 py-3 block w-full text-left rounded-md font-medium hover:bg-[#F4DDDD]">Produtos</a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('products.create_product')}}" class="text-[#4B2E2B]  font-semibold text-lg shadow-sm px-5 py-3 block w-full text-left rounded-md hover:bg-[#F4DDDD]">Criar um produto</a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('categories.categories')}}" class="text-[#4B2E2B] text-lg shadow-sm px-5 py-3 block w-full text-left rounded-md font-medium hover:bg-[#F4DDDD]">Categorias</a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('orders.orders')}}" class="text-[#4B2E2B] text-lg shadow-sm px-5 py-3 block w-full text-left rounded-md font-medium hover:bg-[#F4DDDD]">Pedidos</a>
+                    </li>
+                </ul>
+                
             </div>
         </nav>
     </header>
@@ -88,4 +162,22 @@
     {%block main%} {%endblock%}
 </body>
 <script src="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.js"></script>
+<script>
+    document.querySelectorAll(".only-numbers").forEach((input) => {
+        input.addEventListener("input", () => {
+            if (input.inputMode === "decimal") {
+                let value = input.value.replace(/[^\d.,]/g, "");
+                value = value.replace(",", ".");
+                const parts = value.split(".");
+                if (parts.length > 2) {
+                    value = parts[0] + "." + parts.slice(1).join("");
+                }
+                input.value = value;
+                return;
+            }
+
+            input.value = input.value.replace(/\D/g, "");
+        });
+    });
+</script>
 </html>

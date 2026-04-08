@@ -1,7 +1,9 @@
-from flask import Blueprint, request, render_template, redirect, url_for, flash     
+from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import current_user, login_required
+from sqlalchemy.orm import selectinload
+from utils.pagination import paginate_query
 from db import db
-from models import  CartItems, OrderItems, Orders
+from models import  CartItems, OrderItems, Orders, Products
 from decimal import Decimal
 
 orders_bp = Blueprint("orders", __name__, template_folder="templates")
@@ -9,7 +11,11 @@ orders_bp = Blueprint("orders", __name__, template_folder="templates")
 @login_required
 def checkout():
     user_id = current_user.id
-    user_cart_items = CartItems.query.filter_by(user_id=user_id).all()
+    user_cart_items = (
+        CartItems.query
+        .options(selectinload(CartItems.product))
+        .filter_by(user_id=user_id).all()
+    )
 
     if not user_cart_items:
         flash("Seu carrinho está vazio", "error")
@@ -48,5 +54,27 @@ def checkout():
 @login_required
 def orders():
     user_id = current_user.id
-    orders = current_user.orders
-    return render_template("orders.html", user_id=user_id, orders=orders)
+    page = request.args.get("page", 1, type=int)
+    per_page = 5
+
+    base_query = (
+        Orders.query
+        .filter_by(user_id=user_id)
+        .options(
+            selectinload(Orders.items)
+                .selectinload(OrderItems.product)
+                .selectinload(Products.category)
+        )
+        .order_by(Orders.id.desc())
+    )
+
+    orders, total, total_pages, page = paginate_query(base_query, page, per_page)
+
+    return render_template(
+        "orders.html", 
+        user_id=user_id, 
+        orders=orders,
+        page=page,
+        total_pages=total_pages,
+        per_page=per_page
+    )

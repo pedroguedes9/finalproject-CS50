@@ -25,9 +25,7 @@
             </div>
         </form>
     </div>
-    <br>
-    <hr>
-    <br>
+    <hr class="my-7">
     {% if not categories %}
         <p>Não há nenhuma categoria criada ainda.</p>
     {% else %}
@@ -161,6 +159,8 @@
                     </div>
                 {% endif %}
             {% endfor %}
+            
         </div>
     {% endif %}
+    {% include "_pagination.html" %}
 {% endblock %}

@@ -1,19 +1,39 @@
+from utils.decorators import admin_required
 from flask import Blueprint, request, render_template, redirect, url_for, flash
 from flask_login import login_required
 from sqlalchemy.exc import IntegrityError
+from utils.pagination import paginate_query
 from db import db
 from models import Products, Categories
+
 
 categories_bp = Blueprint("categories", __name__, template_folder="templates")
 
 @categories_bp.route("/categories", methods=["GET"])
 @login_required
+@admin_required
 def categories():
-    categories = Categories.query.all()
-    return render_template("categories.html", categories=categories)
+    page = request.args.get("page", 1, type=int)
+    per_page = 12
+
+    base_query = (
+        Categories.query
+        .filter(Categories.name != "sem categoria")
+        .order_by(Categories.id.asc())
+    )
+
+    categories, total, total_pages, page = paginate_query(base_query, page, per_page)
+
+    return render_template(
+        "categories.html", 
+        categories=categories,
+        page=page,
+        total_pages=total_pages
+    )
 
 @categories_bp.route("/add", methods = ["POST"])
 @login_required
+@admin_required
 def add_category():
     name = request.form.get("name", "").strip().lower()
     if name == "":
@@ -39,6 +59,7 @@ def add_category():
 
 @categories_bp.route("/edit", methods=["POST"])
 @login_required
+@admin_required
 def edit_category():
     category_id = request.form.get("id","")
     if category_id == "":
@@ -79,6 +100,7 @@ def edit_category():
 
 @categories_bp.route("/delete", methods=["POST"])
 @login_required
+@admin_required
 def delete_category():
     category_id = request.form.get("category-id","")
     if category_id == "":
@@ -108,14 +130,16 @@ def delete_category():
         db.session.add(without_category)
         db.session.flush()
 
-    if Products.query.filter_by(category_id=category_id).count() > 0:
-        flash('Já existem produtos com essa categoria, então eles agora estão "Sem categoria"', "info")
-
-    # Update em massa: move TODOS os produtos da categoria atual para "sem categoria"
-    Products.query.filter_by(category_id=category_id).update(
-        {"category_id": without_category.id},
-        synchronize_session=False
+# Update em massa: move TODOS os produtos da categoria atual para "sem categoria"
+# e conta quantos itens foram movidos para saber se algum item tinha essa categoria
+    updated = (
+        Products.query
+        .filter_by(category_id=category_id)
+        .update({"category_id": without_category.id}, synchronize_session=False)
     )
+
+    if updated > 0:
+        flash('Já existem produtos com essa categoria, então eles agora estão "Sem categoria"', "info")
 
     db.session.delete(category)
 

@@ -31,7 +31,7 @@ class Products(db.Model):
     name = db.Column(db.String(30), nullable=False)
     price = db.Column(db.Numeric(10, 2), nullable=False)
     description = db.Column(db.String, nullable=True)
-    category_id = db.Column(db.Integer, db.ForeignKey("categories.id"), nullable=True)
+    category_id = db.Column(db.Integer, db.ForeignKey("categories.id"), nullable=True, index=True)
     stock = db.Column(db.Integer, nullable=False)
     is_active = db.Column(db.Boolean, nullable=False, default=1)
     image = db.Column(db.String, nullable=True)
@@ -64,8 +64,8 @@ class CartItems(db.Model):
     __table_args__ = (db.UniqueConstraint("user_id", "product_id"),)
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    product_id = db.Column(db.Integer, db.ForeignKey("products.id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False, index=True)
+    product_id = db.Column(db.Integer, db.ForeignKey("products.id"), nullable=False, index=True)
     quantity = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime, default=func.now())
 
@@ -84,7 +84,7 @@ class Orders(db.Model):
     __tablename__ = "orders"
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False, index=True)
     status = db.Column(db.String(30) ,nullable=False)
     total_price = db.Column(db.Numeric(10, 2), nullable=False)
     created_at = db.Column(db.DateTime, default=func.now())
@@ -100,8 +100,8 @@ class OrderItems(db.Model):
     __tablename__ = "order_items"
 
     id = db.Column(db.Integer, primary_key=True)
-    order_id = db.Column(db.Integer, db.ForeignKey("orders.id"), nullable=False)
-    product_id = db.Column(db.Integer, db.ForeignKey("products.id"), nullable=False)
+    order_id = db.Column(db.Integer, db.ForeignKey("orders.id"), nullable=False, index=True)
+    product_id = db.Column(db.Integer, db.ForeignKey("products.id"), nullable=False, index=True)
     price = db.Column(db.Numeric(10, 2), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
 

@@ -1,5 +1,7 @@
 from flask import Blueprint, request, render_template, redirect, url_for, flash
 from db import db
+from sqlalchemy.orm import selectinload
+from utils.pagination import paginate_query
 from flask_login import current_user, login_required
 from models import  CartItems, Products
 from decimal import Decimal
@@ -63,9 +65,35 @@ def add_to_cart():
 @login_required
 def cart():
     user_id = current_user.id
-    cart_items = current_user.cart_items
+    page = request.args.get("page", 1, type=int)
+    per_page = 6
+
+    base_query = (
+        CartItems.query
+        .filter_by(user_id=user_id)
+        .options(
+            selectinload(CartItems.product)
+                .selectinload(Products.category)
+        )
+    )
+    cart_items, total, total_pages, page = paginate_query(base_query, page, per_page)
+
+    all_items = (
+        CartItems.query
+        .filter_by(user_id=user_id)
+        .options(selectinload(CartItems.product))
+        .all()
+    )
     total_price = sum(Decimal(item.product.price) * Decimal(item.quantity) for item in cart_items)
-    return render_template("cart.html", cart_items = cart_items, user_id=user_id, total_price=total_price)
+
+    return render_template(
+        "cart.html", 
+        cart_items = cart_items, 
+        user_id=user_id, 
+        total_price=total_price,
+        page=page,
+        total_pages=total_pages,
+    )
 
 
 @cart_bp.route("/remove", methods=["POST"])

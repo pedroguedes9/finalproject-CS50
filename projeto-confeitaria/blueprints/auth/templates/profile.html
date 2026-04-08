@@ -48,16 +48,62 @@
                 </div>
             </div>
         </form>
-        <form action="{{url_for('auth.logout')}}" method="get">
+        <form id="delete-form-{{current_user.id}}" action="{{url_for('auth.logout')}}" method="get">
             <div class="flex justify-center">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="hidden" value="{{current_user.id}}" name="id">
                 <button
-                    type="submit"
+                    type="button"
+                    data-modal-target="popup-modal-{{ current_user.id }}"
+                    data-modal-toggle="popup-modal-{{ current_user.id }}"
                     class="text-white bg-[#b91c1c] hover:bg-red-800 shadow-xl shadow-red-600/5 transition duration-300 focus:ring-2 focus:ring-[#f7c5c5]
-                    font-medium leading-5 rounded-full text-sm px-8 py-3 focus:outline-none mt-6 "
-                    onclick="return confirm('Você tem certeza que deseja sair?')">
+                    font-medium leading-5 rounded-full text-sm px-8 py-3 focus:outline-none mt-6 ">
                     Sair
                 </button>
             </div>
         </form>
+    </div>
+    <div
+        id="popup-modal-{{ current_user.id }}"
+        tabindex="-1"
+        aria-hidden="true"
+        class="hidden fixed inset-0 z-50 items-center justify-center bg-black/30 backdrop-blur-[2px]"
+        >
+        <div class="relative w-full max-w-md p-4">
+            <div class="relative rounded-2xl border border-[#E6D3D3] bg-[#FFF8F8] p-6 shadow-sm">
+                <button
+                    type="button"
+                    class="absolute right-3 top-3 h-9 w-9 rounded-full text-[#5F4344] hover:bg-[#F4DDDD]"
+                    data-modal-hide="popup-modal-{{ current_user.id }}"
+                >
+                    <span class="sr-only">Fechar</span>
+                    ✕
+                </button>
+
+                <div class="text-center">
+                    <p class="text-sm uppercase tracking-wide text-[#8B6A6B]">Confirmação</p>
+                    <h3 class="mt-2 text-lg font-semibold text-[#3F2D2E]">
+                        Você quer sair?
+                    </h3>
+
+                    <div class="mt-6 flex items-center justify-center gap-3">
+                        <button
+                        type="submit"
+                        form="delete-form-{{ current_user.id }}"
+                        class="rounded-full bg-[#b91c1c] px-5 py-2 text-sm font-medium text-white hover:bg-[#7d1410]"
+                        >
+                            Sim, sair
+                        </button>
+                        <button
+                            type="button"
+                            data-modal-hide="popup-modal-{{ current_user.id }}"
+                            class="rounded-full border border-[#D4A5A5] bg-[#FDF4F4] px-5 py-2 text-sm font-medium text-[#5F4344] hover:bg-[#F4DDDD]"
+                        >
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}

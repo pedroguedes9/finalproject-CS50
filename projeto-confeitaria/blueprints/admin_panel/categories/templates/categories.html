@@ -3,7 +3,7 @@
 {% block main %}
     <div class=" space-y-8 mt-5 md:max-w-md max-w-72 w-full mx-auto">
         <h2 class="font-semibold text-2xl text-center">Adicionar categoria</h2>
-        <form action="{{url_for('categories.add_category')}}" method="post">
+        <form action="{{url_for('.add_category')}}" method="post">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <label for="name" class="block mb-2.5 text-sm font-medium font-serif text-[#373831]">Nome da categoria:</label>
             <input
@@ -55,7 +55,7 @@
                                 Editar nome
                             </button>
                             <div class="bg-[#b91c1c] hover:bg-[#7d1410] shadow-md hover:shadow-lg transition duration-300  rounded-lg text-white">
-                                <form id="delete-form-{{ category.id }}" action="{{url_for('categories.delete_category')}}" method="post" class="w-full">
+                                <form id="delete-form-{{ category.id }}" action="{{url_for('.delete_category')}}" method="post" class="w-full">
                                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                     <input type="hidden" value="{{category.id}}" name="category-id">
                                     <button
@@ -89,7 +89,7 @@
 
                                 <h3 class="text-lg font-semibold text-[#3F2D2E] mb-4">Editar categoria</h3>
                                 <p class="text-sm font-semibold">Nome atual: <span class="font-normal">{{category.name}}</span></p>
-                                <form action="{{ url_for('categories.edit_category') }}" method="post" class="space-y-4">
+                                <form action="{{ url_for('.edit_category') }}" method="post" class="space-y-4">
                                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                     <input type="hidden" name="id" value="{{ category.id }}">
 

@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, redirect
+from flask import Flask, render_template, Blueprint, flash, url_for, redirect
 from flask_login import LoginManager, current_user
 from flask_wtf.csrf import CSRFProtect
 from db import db
@@ -8,9 +8,10 @@ from blueprints.cart.cart import cart_bp
 from blueprints.products.products import products_bp
 from blueprints.orders.orders import orders_bp
 from blueprints.auth.auth import auth_bp
-from blueprints.categories.categories import categories_bp
+from blueprints.admin_panel.categories.categories import categories_bp
+from blueprints.admin_panel.admin_products.admin_products import admin_products_bp
+from blueprints.admin_panel.admin_orders.admin_orders import admin_orders_bp
 from dotenv import load_dotenv
-from utils.decorators import admin_required
 
 load_dotenv()
 
@@ -27,13 +28,28 @@ login_manager.login_view = 'auth.login'
 login_manager.login_message = "Por favor, faça login para acessar está página"
 login_manager.login_message_category = "warning"
 
+admin_bp = Blueprint('admin_panel', __name__)
+
+@admin_bp.before_request
+def check_admin_permission():
+    # Exatamente a mesma lógica do utils/decorators.py
+    if not current_user.is_authenticated or not current_user.is_admin:
+        flash("Acesso restrito a administradores.", "error")
+        return redirect(url_for('index'))
+
 app.register_blueprint(products_bp, url_prefix="/products")
 app.register_blueprint(cart_bp, url_prefix="/cart")
 app.register_blueprint(orders_bp, url_prefix="/orders")
 app.register_blueprint(auth_bp, url_prefix="/auth")
-app.register_blueprint(categories_bp, url_prefix="/categories")
+admin_bp.register_blueprint(categories_bp, url_prefix="/categories")
+admin_bp.register_blueprint(admin_products_bp, url_prefix="/products")
+admin_bp.register_blueprint(admin_orders_bp, url_prefix="/orders")
+app.register_blueprint(admin_bp, url_prefix="/admin")
+
 
 csrf = CSRFProtect(app)
+
+
 
 @login_manager.user_loader
 def load_user(user_id):

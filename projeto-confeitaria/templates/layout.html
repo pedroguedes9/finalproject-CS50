@@ -72,31 +72,32 @@
             </div>
         </nav>
         <nav class="bg-[#FAF7F2] ">
-            <div class=" hidden sm:block max-w-7xl px-4 py-3 mx-auto">
+            <div class=" hidden sm:block max-w-7xl px-4 py-3 mx-auto ">
                 <div class="flex items-center">
-                    <ul class="flex flex-row gap-8 mt-0 text-sm font-medium rtl:space-x-reverse">
-                        <li>
-                            <a href="{{ url_for('index')}}" class="text-pink-900 hover:underline" aria-current="page">Home</a>
-                        </li>
-                        <li>
-                            <a href="{{ url_for('products.products')}}" class="text-pink-900 hover:underline">Produtos</a>
-                        </li>
-                        {% if current_user.is_admin %}
+                    <ul class="flex flex-row justify-between w-full gap-8 mt-0 text-sm font-medium rtl:space-x-reverse">
+                        <div class="flex gap-8">
                             <li>
-                                <a href="{{ url_for('products.create_product')}}" class="text-pink-900 hover:underline">Criar um produto</a>
+                                <a href="{{ url_for('index')}}" class="text-pink-900 hover:underline" aria-current="page">Home</a>
                             </li>
                             <li>
-                                <a href="{{ url_for('admin_panel.categories.categories')}}" class="text-pink-900 hover:underline">Categorias</a>
+                                <a href="{{ url_for('products.products')}}" class="text-pink-900 hover:underline">Produtos</a>
                             </li>
-                        {% endif %}
-                        <li>
-                            <a href="{{ url_for('orders.orders')}}" class="text-pink-900 hover:underline">Pedidos</a>
-                        </li>
+                            <li>
+                                <a href="{{ url_for('orders.orders')}}" class="text-pink-900 hover:underline">Pedidos</a>
+                            </li>
+                        </div>
+                        <div>
+                            {% if current_user.is_admin %}
+                                <li>
+                                    <a href="{{ url_for('admin_panel.admin_products.products')}}" class="text-pink-900 hover:underline">Painel Admin</a>
+                                </li>
+                            {% endif %}
+                        </div>
                     </ul>
                 </div>
             </div>
             <div 
-                class=" sm:hidden fixed top-0 left-0 h-dvh w-80 bg-[#FAF7F2] border-x-[#E8DED7] shadow-sm
+                class=" sm:hidden fixed flex flex-col top-0 left-0 h-dvh w-80 bg-[#FAF7F2] border-x-[#E8DED7] shadow-sm
                 z-40 -translate-x-full overflow-y-auto transition-transform" 
                 id="menu"
                 data-drawer-placement="left"
@@ -120,23 +121,27 @@
                     </button>
                 </div>
                 <ul class="flex flex-col flex-1 justify-between items-stretch gap-1">
-                    <li>
-                        <a href="{{ url_for('index')}}" 
-                        class="text-[#4B2E2B] text-lg shadow-sm px-5 py-3 block w-full text-left rounded-md font-medium  hover:bg-[#F4DDDD] " 
-                        aria-current="page">Home</a>
-                    </li>
-                    <li>
-                        <a href="{{ url_for('products.products')}}" class="text-[#4B2E2B] text-lg shadow-sm px-5 py-3 block w-full text-left rounded-md font-medium hover:bg-[#F4DDDD]">Produtos</a>
-                    </li>
-                    <li>
-                        <a href="{{ url_for('products.create_product')}}" class="text-[#4B2E2B]  font-semibold text-lg shadow-sm px-5 py-3 block w-full text-left rounded-md hover:bg-[#F4DDDD]">Criar um produto</a>
-                    </li>
-                    <li>
-                        <a href="{{ url_for('admin_panel.categories.categories')}}" class="text-[#4B2E2B] text-lg shadow-sm px-5 py-3 block w-full text-left rounded-md font-medium hover:bg-[#F4DDDD]">Categorias</a>
-                    </li>
-                    <li>
-                        <a href="{{ url_for('orders.orders')}}" class="text-[#4B2E2B] text-lg shadow-sm px-5 py-3 block w-full text-left rounded-md font-medium hover:bg-[#F4DDDD]">Pedidos</a>
-                    </li>
+                    <div class="flex-col gap-1 flex flex-1">
+                        <li>
+                            <a href="{{ url_for('index')}}"
+                            class="text-[#4B2E2B] text-lg shadow-sm px-5 py-3 block w-full text-left rounded-md font-medium  hover:bg-[#F4DDDD] "
+                            aria-current="page">Home</a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('products.products')}}" class="text-[#4B2E2B] text-lg shadow-sm px-5 py-3 block w-full text-left rounded-md font-medium hover:bg-[#F4DDDD]">Produtos</a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('orders.orders')}}" class="text-[#4B2E2B] text-lg shadow-sm px-5 py-3 block w-full text-left rounded-md font-medium hover:bg-[#F4DDDD]">Pedidos</a>
+                        </li>
+                    </div>
+                    <hr>
+                    <div>
+                        {% if current_user.is_admin %}
+                            <li>
+                                <a href="{{ url_for('admin_panel.admin_products.products')}}" class="text-[#4B2E2B] text-lg shadow-sm px-5 py-3 block w-full text-left rounded-md font-medium hover:bg-[#F4DDDD]">Painel Admin</a>
+                            </li>
+                        {% endif %}
+                    </div>
                 </ul>
                 
             </div>

@@ -2,7 +2,7 @@
 {% block title %} Criar produtos {% endblock %} 
 {% block main %}
     <h1 class="text-center font-bold font-serif text-3xl mt-3">Criar um produto</h1>
-    <form action="{{ url_for('products.create_product') }}" enctype="multipart/form-data" method="post" >
+    <form action="{{ url_for('.create_product') }}" enctype="multipart/form-data" method="post" >
         <div class="flex justify-center mt-3">
             <div class="space-y-8 max-w-72  md:max-w-lg w-full mx-auto">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">

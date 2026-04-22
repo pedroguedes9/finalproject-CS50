@@ -1,0 +1,235 @@
+{% extends "admin_layout.html" %}
+{% block title %} Histórico de Pedidos Admin {% endblock %}
+{% block main %}
+    <form id="filter-form" action="{{ url_for('admin_panel.admin_orders.orders')}}" method="get" class="flex flex-wrap gap-4 items-center mb-4 mt-4 justify-center ">
+        <details class="group relative">
+            <summary class="flex items-center gap-2 px-4 py-2.5 bg-[#eae9dd] border-none rounded-lg text-[#373831] font-serif font-medium transition-colors hover:bg-[#dcdbce] cursor-pointer list-none [&::-webkit-details-marker]:hidden shadow-sm focus:ring-2 focus:ring-[#f7c5c5] focus:outline-none">
+                <span class="text-sm"> Status </span>
+                <span class="transition-transform group-open:-rotate-180">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"></path></svg>
+                </span>
+            </summary>
+            <div class="z-50 w-48 divide-y divide-[#f7c5c5] rounded-xl border border-[#eae9dd] bg-[#eae9dd] shadow-lg absolute start-0 top-14">
+                <fieldset class="p-3"> 
+                    <div class="flex flex-col gap-2">
+                        <label class="flex items-center gap-2 text-sm font-medium font-serif text-[#373831] cursor-pointer hover:text-pink-900">
+                            <input type="radio" name="status" value="" class="size-4 text-[#815a5b] focus:ring-[#f7c5c5] bg-white border-gray-300" {% if not current_status %}checked{% endif %}> 
+                            <span>Todos</span>
+                        </label>
+                        {% for status_enum in OrderStatus %}
+                            <label class="flex items-center gap-2 text-sm font-medium font-serif text-[#373831] cursor-pointer hover:text-pink-900">
+                                <input type="radio" name="status" value="{{ status_enum.value }}" class="size-4 text-[#815a5b] focus:ring-[#f7c5c5] bg-white border-gray-300" {% if status_enum.value == current_status %}checked{% endif %}>
+                                {{ status_enum.value }}
+                            </label>
+                        {% endfor %}
+                    </div>
+                </fieldset>
+            </div>  
+        </details>
+        
+        <details class="group relative">
+            <summary class="flex items-center gap-2 px-4 py-2.5 bg-[#eae9dd] border-none rounded-lg text-[#373831] font-serif font-medium transition-colors hover:bg-[#dcdbce] cursor-pointer list-none [&::-webkit-details-marker]:hidden shadow-sm focus:ring-2 focus:ring-[#f7c5c5] focus:outline-none">
+                <span class="text-sm"> Pagamento </span>
+                <span class="transition-transform group-open:-rotate-180">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"></path></svg>
+                </span>
+            </summary>
+            <div class="z-50 w-48 divide-y divide-[#f7c5c5] rounded-xl border border-[#eae9dd] bg-[#eae9dd] shadow-lg absolute start-0 top-14">
+                <fieldset class="p-3"> 
+                    <div class="flex flex-col gap-2">
+                        <label class="flex items-center gap-2 text-sm font-medium font-serif text-[#373831] cursor-pointer hover:text-pink-900">
+                            <input type="radio" name="payment-status" value="" class="size-4 text-[#815a5b] focus:ring-[#f7c5c5] bg-white border-gray-300" {% if not payment_current_status %}checked{% endif %}> 
+                            <span>Todos</span>
+                        </label>
+                        {% for payment_status_enum in PaymentStatus %}
+                            <label class="flex items-center gap-2 text-sm font-medium font-serif text-[#373831] cursor-pointer hover:text-pink-900">
+                                <input type="radio" name="payment-status" value="{{ payment_status_enum.value }}" class="size-4 text-[#815a5b] focus:ring-[#f7c5c5] bg-white border-gray-300" {% if payment_status_enum.value == payment_current_status %}checked{% endif %}>
+                                {{ payment_status_enum.value }}
+                            </label>
+                        {% endfor %}
+                    </div>
+                </fieldset>
+            </div>  
+        </details>
+
+        <details class="group relative">
+            <summary class="flex items-center gap-2 px-4 py-2.5 bg-[#eae9dd] border-none rounded-lg text-[#373831] font-serif font-medium transition-colors hover:bg-[#dcdbce] cursor-pointer list-none [&::-webkit-details-marker]:hidden shadow-sm focus:ring-2 focus:ring-[#f7c5c5] focus:outline-none">
+                <span class="text-sm"> Preço </span>
+                <span class="transition-transform group-open:-rotate-180">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"></path></svg>
+                </span>
+            </summary>
+            <div class="z-50 w-64 divide-y divide-[#f7c5c5] rounded-xl border border-[#eae9dd] bg-[#eae9dd] shadow-lg absolute start-0 top-14">
+                <div class="flex items-center justify-between px-3 py-2 border-b border-[#f7c5c5]">
+                    <span class="text-sm font-medium font-serif text-[#373831]">Filtrar valor</span>
+                    <button type="button" onclick="document.getElementById('min-price').value=''; document.getElementById('max-price').value=''; document.getElementById('filter-form').submit();" class="text-sm font-serif text-[#815a5b] underline transition-colors hover:text-[#a97c7d]">
+                        Limpar
+                    </button>
+                </div>
+                <div class="flex items-center gap-3 p-3">
+                    <label for="min-price" class="w-full">
+                        <span class="text-xs font-medium font-serif text-[#373831] mb-1 block"> Mínimo </span>
+                        <input type="text" id="min-price" name="min-price" inputmode="decimal" placeholder="R$ 0,00" min="0" step="0.01"
+                        {% if min_price_val is not none %}value="{{min_price_val}}"{% endif %}
+                        class="only-numbers w-full bg-white text-pink-900 text-sm rounded-lg focus:ring-2 focus:ring-[#f7c5c5] block px-3 py-2 shadow-sm placeholder:text-gray-400 border-none">
+                    </label>
+                    <label for="max-price" class="w-full">
+                        <span class="text-xs font-medium font-serif text-[#373831] mb-1 block"> Máximo </span>
+                        <input type="text" id="max-price" name="max-price" inputmode="decimal" placeholder="R$ 0,00" min="0" step="0.01"
+                        {% if max_price_val is not none %}value="{{max_price_val}}"{% endif %}
+                        class="only-numbers w-full bg-white text-pink-900 text-sm rounded-lg focus:ring-2 focus:ring-[#f7c5c5] block px-3 py-2 shadow-sm placeholder:text-gray-400 border-none">
+                    </label>
+                </div>
+            </div>
+        </details>
+
+        <details class="group relative">
+            <summary class="flex items-center gap-2 px-4 py-2.5 bg-[#eae9dd] border-none rounded-lg text-[#373831] font-serif font-medium transition-colors hover:bg-[#dcdbce] cursor-pointer list-none [&::-webkit-details-marker]:hidden shadow-sm focus:ring-2 focus:ring-[#f7c5c5] focus:outline-none">
+                <span class="text-sm"> Categorias </span>
+                <span class="transition-transform group-open:-rotate-180">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"></path></svg>
+                </span>
+            </summary>
+            <div class="z-50 w-48 divide-y divide-[#f7c5c5] rounded-xl border border-[#eae9dd] bg-[#eae9dd] shadow-lg absolute start-0 top-14">
+                <fieldset class="p-3"> 
+                    <div class="flex flex-col gap-2">
+                        <label class="flex items-center gap-2 text-sm font-medium font-serif text-[#373831] cursor-pointer hover:text-pink-900">
+                            <input type="radio" name="category-name" value="" class="size-4 text-[#815a5b] focus:ring-[#f7c5c5] bg-white border-gray-300" {% if not current_category_name %}checked{% endif %}> 
+                            <span>Todas</span>
+                        </label>
+                        {% for category in categories %}
+                            <label class="flex items-center gap-2 text-sm font-medium font-serif text-[#373831] cursor-pointer hover:text-pink-900">
+                                <input type="radio" name="category-name" value="{{ category.name }}" class="size-4 text-[#815a5b] focus:ring-[#f7c5c5] bg-white border-gray-300" {% if category.name == current_category_name %}checked{% endif %}>
+                                {{ category.name }}
+                            </label>
+                        {% endfor %}
+                    </div>
+                </fieldset>
+            </div>  
+        </details>
+
+        <input type="text" placeholder="Nome do produto" name="product-name"
+        {% if product_name %}value="{{product_name}}"{% endif %}
+        class="bg-[#eae9dd] text-[#373831] font-serif font-medium text-sm rounded-lg focus:ring-2 focus:ring-[#f7c5c5] focus:outline-none block px-4 py-2.5 shadow-sm placeholder:text-[#373831]/60 border-none">
+
+        <!-- Botão oculto, pois o evento 'change' ou 'Enter' submeterão o form -->
+        <button type="submit" class="hidden">Enviar</button>
+    </form>
+    <div class="flex flex-col gap-5 justify-center items-center ">
+        {% if not orders %}
+            <p class="mt-6 mx-auto max-w-md rounded-xl border border-[#D4A5A5] bg-[#FDF4F4] px-5 py-4 text-center text-[#5F4344] font-medium shadow-sm">Nenhum pedido foi encontrado com essas especificações.</p>
+        {% else %}
+            {% for order in orders %}
+                <div class="max-w-3xl w-full bg-[#FFF8F8] p-6 border border-[#E6D3D3] rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-0.5 transition">
+                    <div class="flex flex-row justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold text-[#3F2D2E]">Pedido: {{ (total + 1) - (loop.index + ((page - 1) * per_page)) }}</h3>
+                        <div class="flex flex-col items-center">
+                            <span class="text-sm text-[#6B4B4C]">Status: {{order.status.value}}</span>
+                            <span class="text-sm text-[#6B4B4C]">Pagamento: {{order.payment_status.value}} </span>
+                        </div>
+                    </div>
+                    <div class="grid gap-4">
+                        {% for order_item in order.items %}
+                            <div class="w-full bg-white/60 p-4 border border-[#E6D3D3] rounded-xl">
+                                <div class="flex flex-row gap-4">
+                                    <img class="w-24 h-24 object-cover rounded-xl border border-[#E6D3D3]" src="/{{order_item.product.image}}" alt="{{order_item.product.name}}" >
+                                    <div class="flex-1">
+                                        <div class="flex flex-row items-center gap-3">
+                                            <h5 class="text-lg font-semibold text-[#3F2D2E] first-letter:uppercase">{{order_item.product.name}} </h5>
+                                            {% if order_item.product.category %}
+                                                <span class="bg-[#EED7D8] text-[#5F4344] rounded-full px-3 py-1 text-xs font-semibold">
+                                                    {{order_item.product.category.name}}
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                        <p class="text-sm text-[#6B4B4C] mt-2 first-letter:uppercase">{{order_item.product.description}}</p>
+                                        <div class="flex items-center justify-between mt-4">
+                                            <span class="text-sm text-[#6B4B4C]">Quantidade: {{order_item.quantity}}</span>
+                                            <span class="text-xl font-extrabold text-[#3F2D2E]">R${{order_item.price}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="mt-4 flex justify-between">
+                        <button 
+                        type="button" 
+                        data-modal-target="edit-order-{{ order.id }}"
+                        data-modal-toggle="edit-order-{{ order.id }}"
+                        class="rounded-full bg-[#D4A5A5] px-4 py-1.5 text-sm font-medium text-white hover:bg-[#BF9191]">
+                            Editar
+                        </button>
+                        <span class="text-base font-semibold text-[#3F2D2E]">Total: R${{order.total_price}}</span>
+                    </div>
+                </div>
+                <div
+                    id="edit-order-{{ order.id }}"
+                    tabindex="-1"
+                    aria-hidden="true"
+                    class="hidden fixed inset-0 z-50 items-center justify-center bg-black/30 backdrop-blur-[2px]"
+                >
+                    <div class="w-full max-w-md p-4">
+                        <div class="rounded-2xl border border-[#E6D3D3] bg-[#FFF8F8] p-6 shadow-sm relative">
+                            <button
+                                type="button"
+                                data-modal-hide="edit-order-{{ order.id }}"
+                                class="absolute right-3 top-3 h-9 w-9 rounded-full text-[#5F4344] hover:bg-[#F4DDDD]"
+                            >
+                                <span class="sr-only">Fechar</span>
+                                ✕
+                            </button>
+
+                            <h3 class="text-lg font-semibold text-[#3F2D2E] mb-4">Editar Pedido #{{ order.id }}</h3>
+
+                            <form action="{{ url_for('.edit_order') }}" method="post" class="space-y-4">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <!-- O input hidden essencial para a rota saber quem estamos editando! -->
+                                <input type="hidden" name="id" value="{{ order.id }}">
+                                <input type="hidden" name="url" value="{{ request.url }}">
+
+                                <!-- Select de Status do Pedido (Logística) -->
+                                <div>
+                                    <label class="block text-sm font-medium text-[#3F2D2E] mb-1">Status de Entrega</label>
+                                    <select name="status" class="w-full rounded-lg border border-[#D4A5A5] bg-[#FDF4F4] px-3 py-2 text-sm text-[#5F4344] focus:ring-2 focus:ring-[#BF9191]">
+                                        {% for status_enum in OrderStatus %}
+                                            <option value="{{ status_enum.value }}" {% if order.status.value == status_enum.value %}selected{% endif %}>
+                                                {{ status_enum.value }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <!-- Select de Pagamento -->
+                                <div>
+                                    <label class="block text-sm font-medium text-[#3F2D2E] mb-1">Status de Pagamento</label>
+                                    <!-- Você precisará passar PaymentStatus da rota orders() para cá, igual passou OrderStatus, mas por agora faça na estrutura: -->
+                                    <select name="payment_status" class="w-full rounded-lg border border-[#D4A5A5] bg-[#FDF4F4] px-3 py-2 text-sm text-[#5F4344] focus:ring-2 focus:ring-[#BF9191]">
+                                        {% for payment_enum in PaymentStatus %}
+                                        <option value="{{payment_enum.value}}" {% if order.payment_status.value == payment_enum.value %}selected{% endif %}>
+                                            {{payment_enum.value}}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="flex justify-end gap-3 mt-5">
+                                    <button type="button" data-modal-hide="edit-order-{{ order.id }}" class="rounded-full border border-[#D4A5A5] bg-[#FDF4F4] px-5 py-2 text-sm font-medium text-[#5F4344] hover:bg-[#F4DDDD]">Cancelar</button>
+                                    <button type="submit" class="rounded-full bg-[#815a5b] px-5 py-2 text-sm font-medium text-white hover:bg-[#a97c7d]">Salvar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    {% include "_pagination.html" %}
+    <script>
+        const form = document.getElementById('filter-form')
+
+        form.addEventListener('change', function(event) {
+            form.submit()
+        })
+    </script>
+{% endblock %}

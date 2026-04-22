@@ -1,7 +1,8 @@
 import os
-from flask import Flask, render_template, Blueprint, flash, url_for, redirect
+from flask import Flask, render_template, Blueprint, flash, url_for, redirect, request
 from flask_login import LoginManager, current_user
 from flask_wtf.csrf import CSRFProtect
+from flask_migrate import Migrate
 from db import db
 from models import Users
 from blueprints.cart.cart import cart_bp
@@ -22,6 +23,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///confeitaria.db"
 app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024 #2MB
 
 db.init_app(app)
+
+migrate = Migrate(app, db)
 
 login_manager = LoginManager(app)
 login_manager.login_view = 'auth.login'
@@ -49,7 +52,21 @@ app.register_blueprint(admin_bp, url_prefix="/admin")
 
 csrf = CSRFProtect(app)
 
+@app.context_processor
+def inject_url_for_page():
+    def url_for_page(page_number):
+        # Pega a "fofoca" atual da requisição (URL) e converte num dicionário editável
+        args = request.args.copy()
 
+        # Sobrescreve (ou cria) apenas a chavinha 'page' para a nossa nova página
+        args['page'] = page_number
+
+        # Pede pro Flask montar a URL usando o roteador atual (request.endpoint)
+        # e joga a bagagem (args.to_dict()) como continuação da URL
+        return url_for(request.endpoint, **args)
+
+    # Entrega a ferramenta pro Jinja
+    return dict(url_for_page=url_for_page)
 
 @login_manager.user_loader
 def load_user(user_id):

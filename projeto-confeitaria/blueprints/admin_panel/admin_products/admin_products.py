@@ -296,7 +296,7 @@ def edit_product():
             
             ext = os.path.splitext(image.filename)[1]
             unique_filename = f"{uuid.uuid4().hex}{ext}"
-            upload_folder = os.path.join(os.path.dirname(__file__), '..', '..', 'static', 'uploads')
+            upload_folder = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'static', 'uploads')
             upload_folder = os.path.abspath(upload_folder)
             if not os.path.exists(upload_folder):
                 os.makedirs(upload_folder)

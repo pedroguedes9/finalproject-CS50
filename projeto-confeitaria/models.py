@@ -2,6 +2,7 @@ from db import db
 from flask_login import UserMixin
 from sqlalchemy import func
 from decimal import Decimal
+import enum
 
 class Users(UserMixin, db.Model):
     __tablename__ = "users"
@@ -80,21 +81,37 @@ class CartItems(db.Model):
         return f"<CartItems user_id={self.user_id} product_id={self.product_id} quantity={self.quantity}>"
 
 
+class OrderStatus(enum.Enum):
+    RECEBIDO = "Recebido"
+    PREPARANDO = "Preparando"
+    PRONTO = "Pronto"
+    SAIU_PARA_ENTREGA = "Saiu para entrega"
+    ENTREGUE = "Entregue"
+
+class PaymentStatus(enum.Enum):
+    PENDENT = "Pendente"
+    PAYED = "Pago"
+    CANCELED = "Cancelado"
 class Orders(db.Model):
     __tablename__ = "orders"
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False, index=True)
-    status = db.Column(db.String(30) ,nullable=False)
+    status = db.Column(db.Enum(OrderStatus, values_callable=lambda x:[e.value for e in x]) ,nullable=False)
+    payment_status = db.Column(db.Enum(PaymentStatus, values_callable=lambda x:[e.value for e in x]) ,nullable=False, default=PaymentStatus.PENDENT.value)
+    # Usei o 'values_callable' para forçar o SQLAlchemy a gravar e ler o 'value' do Enum (lado direito, ex: "Pendente") 
+    # no banco de dados, ignorando o name/chave (lado esquerdo, ex: "PENDENT"). Isso evita o erro de LookupError.
     total_price = db.Column(db.Numeric(10, 2), nullable=False)
     created_at = db.Column(db.DateTime, default=func.now())
 
     items = db.relationship("OrderItems", backref="order")
 
-    def __init__(self, user_id:int, status:str, total_price:Decimal ):
+    def __init__(self, user_id:int, status:str, payment_status:str ,total_price:Decimal ):
         self.user_id = user_id
         self.status = status
         self.total_price = total_price
+        self.payment_status = payment_status
+
 
 class OrderItems(db.Model):
     __tablename__ = "order_items"

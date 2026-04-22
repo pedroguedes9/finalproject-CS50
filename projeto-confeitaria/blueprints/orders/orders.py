@@ -22,7 +22,7 @@ def checkout():
         return redirect(url_for("cart.cart"))
     
     total_price = sum(Decimal(item.product.price) * Decimal(item.quantity) for item in user_cart_items)
-    new_order = Orders(user_id=user_id, status="pending", total_price=total_price)
+    new_order = Orders(user_id=user_id, status="Recebido",payment_status="Pendente" ,total_price=total_price)
     db.session.add(new_order)
     db.session.flush()
 
@@ -76,5 +76,6 @@ def orders():
         orders=orders,
         page=page,
         total_pages=total_pages,
-        per_page=per_page
+        per_page=per_page,
+        total=total
     )

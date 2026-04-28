@@ -18,10 +18,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY')
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///confeitaria.db"
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'instance', 'confeitaria.db')
 app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024 #2MB
 
 db.init_app(app)

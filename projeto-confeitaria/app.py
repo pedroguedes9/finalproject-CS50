@@ -1,10 +1,11 @@
 import os
+import random
 from flask import Flask, render_template, Blueprint, flash, url_for, redirect, request
 from flask_login import LoginManager, current_user
 from flask_wtf.csrf import CSRFProtect
 from flask_migrate import Migrate
 from db import db
-from models import Users
+from models import Users, Products
 from blueprints.cart.cart import cart_bp
 from blueprints.products.products import products_bp
 from blueprints.orders.orders import orders_bp
@@ -12,6 +13,7 @@ from blueprints.auth.auth import auth_bp
 from blueprints.admin_panel.categories.categories import categories_bp
 from blueprints.admin_panel.admin_products.admin_products import admin_products_bp
 from blueprints.admin_panel.admin_orders.admin_orders import admin_orders_bp
+from blueprints.admin_panel.dashboard.dashboard import dashboard_bp
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -47,6 +49,7 @@ app.register_blueprint(auth_bp, url_prefix="/auth")
 admin_bp.register_blueprint(categories_bp, url_prefix="/categories")
 admin_bp.register_blueprint(admin_products_bp, url_prefix="/products")
 admin_bp.register_blueprint(admin_orders_bp, url_prefix="/orders")
+admin_bp.register_blueprint(dashboard_bp)
 app.register_blueprint(admin_bp, url_prefix="/admin")
 
 
@@ -75,7 +78,13 @@ def load_user(user_id):
 
 @app.route("/",methods=["GET"])
 def index():
-    return render_template("index.html")
+    active_products = Products.query.filter(
+        Products.is_active == True,
+        Products.stock >= 1
+    ).all()
+    number_to_sample = min(len(active_products), 3)
+    random_products = random.sample(active_products, number_to_sample )
+    return render_template("index.html", random_products=random_products)
 
 with app.app_context(): 
     db.create_all()

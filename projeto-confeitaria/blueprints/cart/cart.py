@@ -1,6 +1,7 @@
 from flask import Blueprint, request, render_template, redirect, url_for, flash
 from db import db
 from sqlalchemy.orm import selectinload
+from sqlalchemy.exc import IntegrityError
 from utils.pagination import paginate_query
 from flask_login import current_user, login_required
 from models import  CartItems, Products
@@ -49,13 +50,13 @@ def add_to_cart():
         new_quantity = existing_item.quantity + quantity
         if new_quantity > product.stock:
             flash("Quantidade total excede o estoque disponível","error")
-            return redirect(url_for('products.products'))
+            return redirect(url_for('cart.cart'))
         else:
             existing_item.quantity = new_quantity
     else:
         if quantity > product.stock:
             flash("Quantidade total excede o estoque disponível", "error")
-            return redirect(url_for('products.products'))
+            return redirect(url_for('cart.cart'))
         new_cart_item = CartItems(user_id=user_id, product_id=product_id, quantity=quantity)
         db.session.add(new_cart_item)
     db.session.commit()
@@ -102,20 +103,80 @@ def remove_from_cart():
     user_id = current_user.id
     item_id = request.form.get("id")
     
+    if item_id == "":
+        flash("Id do produto não foi fornecido", "error")
+        return redirect(url_for('.cart'))
+    
     try:
         item_id = int(item_id)
     except ValueError:
         flash("O id do item tem que ser um número")
-        return redirect(url_for('cart.cart'))
+        return redirect(url_for('.cart'))
     if item_id < 1:
         flash("O id do item tem que ser maior que 0")
-        return redirect(url_for('cart.cart'))
+        return redirect(url_for('.cart'))
     
     item = CartItems.query.filter_by(id=item_id, user_id=user_id).first()
     if not item:
         flash("O item que você tentou remover não existe", "error")
-        return redirect(url_for('cart.cart'))
+        return redirect(url_for('.cart'))
     
     db.session.delete(item)
     db.session.commit()
-    return redirect(url_for('cart.cart'))
+    return redirect(url_for('.cart'))
+
+
+@cart_bp.route("/decrease", methods=["POST"])
+@login_required
+def decrease_quantity():
+    user_id = current_user.id
+    item_id = request.form.get("id", "")
+    if item_id == "":
+        flash("Id do produto não foi fornecido", "error")
+        return redirect(url_for('.cart'))
+
+    try:
+        item_id = int(item_id)
+    except ValueError:
+        flash("Id de produto inválido", "error")
+        return redirect(url_for('.cart'))
+
+    if item_id < 1:
+        flash("Id de produto inválido", "error")
+        return redirect(url_for('.cart'))
+
+    item = CartItems.query.filter_by(id=item_id, user_id=user_id).first()
+    if not item:
+        flash("Esse produto não existe ou não está no seu carrinho", "error")
+        return redirect(url_for('.cart'))
+
+    quantity = request.form.get("quantity", "")
+    if quantity == "":
+        flash("A quantidade que quer remover do carrinho não foi fornecida", "error")
+        return redirect(url_for('.cart'))
+    
+    try:
+        quantity = int(quantity)
+    except ValueError:
+        flash("A quantidade fornecida é inválida", "error")
+        return redirect(url_for('.cart'))
+    
+    if quantity < 1 or quantity > 1:
+        flash("A quantidade fornecida é inválida", "error")
+        return redirect(url_for('.cart'))
+    
+    if item.quantity > 1:
+        item.quantity = item.quantity - quantity
+    elif item.quantity == 1:
+        db.session.delete(item)
+    else:
+        flash("A quantidade do produto no carrinho é inválida","error")
+        return redirect(url_for('.cart'))
+    
+    try:
+        db.session.commit()
+    except IntegrityError:
+        db.session.rollback()
+        flash("Não foi possível efetuar as mudanças. Tente novamente mais tarde.", "error")
+        return redirect(url_for('.cart'))
+    return redirect(url_for('.cart'))

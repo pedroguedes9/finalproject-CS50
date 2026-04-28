@@ -3,7 +3,7 @@
 {% block main %}
         <form action="{{ url_for('auth.register')}}" method="post">
         <div class=" flex justify-center ">
-            <div class="space-y-12 max-w-md w-full mx-auto">
+            <div class="space-y-12 max-w-md w-full mx-auto p-5">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <div class="mb-12">
                     <label for="username" class="block mb-2.5 text-sm font-medium font-serif text-[#373831]">Nome de usuário:</label>

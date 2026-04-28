@@ -1,5 +1,180 @@
 {% extends "layout.html" %}
-{% block title %} Home {% endblock %}
+{% block title %}Doce Império - Home {% endblock %}
 {% block main %}
-    <h1>Home</h1>
+    <section class="grid grid-cols-1 md:grid-cols-2 bg-[#FAF7F2]">
+        <div class="flex flex-col gap-1 h-full">
+            <div class="flex flex-col justify-center items-center md:items-start gap-3 md:gap-7 px-5 py-12 md:py-24 min-h-96">
+                <h3 class="text-[#BE185D] font-mono text-xs tracking-widest">CONFEITARIA ARTESANAL - Maceió. AL</h3>
+                <h1 class="text-[#4B2E2B] text-5xl font-serif font-semibold text-center md:text-left">Feito com amor, entregue na <span class="text-[#D4A5A5] italic">sua porta.</span></h1>
+                <p class="md:hidden text-[#6B4A45] text-center md:text-left text-sm">Bolos e doces artesanais com ingredientes selecionados.</p>
+                <p class="hidden md:block text-[#6B4A45] text-center md:text-left text-base">Bolos e doces artesanais preparados com ingredientes selecionados, do nosso forno direto para a sua mesa — com carinho em cada detalhe.</p>
+            </div>
+            <div class="flex flex-col md:flex-row gap-3 p-7 pt-0">
+                <a href="{{url_for('products.products')}}" class="w-full h-12 border-[#E8DED7] border flex items-center justify-center rounded-lg text-[#6B4A45] hover:bg-[#2C1A18] hover:text-white">Ver produtos</a>
+                {% if current_user.is_authenticated %}
+                    <a href="{{url_for('auth.profile')}}" class="w-full h-12 border-[#E8DED7] border flex items-center justify-center rounded-lg text-[#6B4A45] hover:bg-[#2C1A18] hover:text-white transition-colors duration-300" >Ver perfil</a>
+                {% else %}
+                    <a href="{{url_for('auth.register')}}" class="w-full h-12 border-[#E8DED7] border flex items-center justify-center rounded-lg text-[#6B4A45] hover:bg-[#2C1A18] hover:text-white transition-colors duration-300" >Criar conta</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class=" flex items-center justify-center bg-[#F4DDDD] pb-5 pl-5">
+            <img src="{{ url_for('static', filename='images/bolo-hero.png') }}" alt="Bolo decorado de três andares da Doce Império">
+        </div>
+    </section>
+    <section class="flex flex-col justify-center items-center gap-1 md:bg-[#FAF7F2] py-4 md:py-20">
+        <div class="flex flex-col justify-center items-center gap-1">
+            <h3 class="text-[#4B2E2B] text-2xl md:text-3xl font-serif font-normal md:font-bold " >
+                Por que <span class="md:hidden">nos escolher?</span><span class="hidden md:inline">escolher a doce império?</span>
+            </h3>
+            <p class="text-[#6B4A45] text-sm">
+                Qualidade em cada detalhe<span class="hidden md:inline">, do preparo à entrega</span>.
+            </p>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-x-5 gap-y-5 py-12 md:py-8 px-4 w-full max-w-4xl ">
+            <div class="flex flex-col items-center justify-center gap-2 border  border-[#E8DED7] shadow-md shadow-[#815a5b]/5 w-full aspect-square p-2 rounded-xl md:bg-white hover:scale-105 hover:shadow-lg transition-all duration-300 ">
+                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 md:w-10 md:h-10">
+                    <circle cx="24" cy="24" r="24" fill="#F4DDDD"/>
+                    <rect x="16" y="16" width="16" height="16" rx="4" fill="#D4A5A5"/>
+                </svg>
+                <h4 class="font-bold text-[#4B2E2B] text-base font-serif">Artesanal</h4>
+                <p class="text-xs text-[#6B4A45] text-center">Feito à mão com receitas tradicionais</p>
+            </div>
+            <div class="flex flex-col items-center justify-center gap-2 border border-[#E8DED7] shadow-md shadow-[#815a5b]/5 w-full aspect-square p-2 rounded-xl md:bg-white hover:scale-105 hover:shadow-lg transition-all duration-300">
+                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 md:w-10 md:h-10">
+                    <circle cx="24" cy="24" r="24" fill="#F4DDDD"/>
+                    <circle cx="24" cy="24" r="8" fill="#D4A5A5"/>
+                </svg>
+                <h4 class="font-bold text-[#4B2E2B] text-base font-serif">Entrega rápida</h4>
+                <p class="text-xs text-[#6B4A45] text-center">Frescor garantido no prazo</p>
+            </div>
+            <div class="flex flex-col items-center justify-center gap-2 border border-[#E8DED7] shadow-md shadow-[#815a5b]/5 w-full aspect-square p-2 rounded-xl md:bg-white hover:scale-105 hover:shadow-lg transition-all duration-300">
+                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 md:w-10 md:h-10">
+                    <circle cx="24" cy="24" r="24" fill="#F4DDDD"/>
+                    <path d="M16 32V20C16 17.7909 17.7909 16 20 16H32V28C32 30.2091 30.2091 32 28 32H16Z" fill="#D4A5A5"/>
+                </svg>
+                <h4 class="font-bold text-[#4B2E2B] text-center text-base font-serif">Ingredientes Selecionados</h4>
+                <p class="text-xs text-[#6B4A45] text-center">Sem conservantes artificiais</p>
+            </div>
+            <div class="flex flex-col items-center justify-center gap-2 border border-[#E8DED7] shadow-md shadow-[#815a5b]/5 w-full aspect-square p-2 rounded-xl md:bg-white hover:scale-105 hover:shadow-lg transition-all duration-300">
+                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 md:w-10 md:h-10">
+                    <circle cx="24" cy="24" r="24" fill="#F4DDDD"/>
+                    <rect x="24" y="12.686" width="16" height="16" rx="4" transform="rotate(45 24 12.686)" fill="#D4A5A5"/>
+                </svg>
+                <h4 class="font-bold text-[#4B2E2B] text-center text-base font-serif">Atendimento Próximo</h4>
+                <p class="text-xs text-[#6B4A45] text-center">Pedido tratado com carinho.</p>
+            </div>
+        </div>
+    </section>
+    <section class="flex flex-col justify-center items-center bg-[#F4DDDD] py-4 md:pt-14 gap-10">
+        <div class="flex flex-col justify-center items-center gap-">
+            <h3  class="text-[#4B2E2B] text-2xl md:text-3xl font-serif font-normal md:font-bold ">
+                Destaques <span class="hidden md:inline">do Cardápio</span>
+            </h3>
+            <p class="text-[#6B4A45] text-sm">
+                Os favoritos dos nossos clientes <span class="hidden md:inline">,fresquinhos e prontos para você</span>.
+            </p>
+        </div>
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-y-5 w-full md:px-28 justify-items-center mt-5 mb-5">
+            {% for product in random_products %}
+                <div class="group relative w-full max-w-sm overflow-hidden rounded-lg border border-[#E8DED7] bg-white shadow-md shadow-[#815a5b]/5 transition-transform duration-300 hover:-translate-y-2 hover:shadow-xl">
+                    <a href="#" class="block h-64 w-full overflow-hidden">
+                        <img class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110" src="/{{product.image}}" alt="{{product.name}}" />
+                    </a>
+                    <div class="p-5">
+                        <div class="flex items-center justify-between">
+                            <a href="#">
+                                <h5 class="text-xl font-semibold tracking-tight text-gray-900 first-letter:uppercase">{{product.name}}</h5>
+                            </a>
+                            <span class="rounded-full bg-pink-100 px-2.5 py-0.5 text-xs font-semibold text-pink-800">{{product.category.name}}</span>
+                        </div>
+                        <p class="mt-2 text-sm text-gray-600 first-letter:uppercase">{{product.description}}</p>
+                        <div class="mt-4 flex flex-col">
+                            <div class="flex items-center justify-between">
+                                <p>
+                                    {% if product.stock > 0 %}
+                                        <span class="text-sm font-bold text-green-600">Em estoque: {{product.stock}}</span>
+                                    {% else %}
+                                        <span class="text-sm font-bold text-red-600">Esgotado</span>
+                                    {% endif %}
+                                </p>
+                                <p class="text-2xl font-bold text-gray-900">R${{product.price}}</p>
+                            </div>
+                            <form action="{{url_for('cart.add_to_cart')}}" method="post" class="mt-4">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                <input type="hidden" value="{{product.id}}" name="id">
+                                <div class="flex items-center gap-4">
+                                    <label class="flex items-center">
+                                        <span class="mr-2 text-sm font-medium text-gray-700">Qtd:</span>
+                                        <input type="number" name="quantity" value="1" min="1" max="{{product.stock}}" class="w-16 rounded-md border border-gray-300 bg-gray-50 px-2 py-1 text-center text-gray-900 focus:border-pink-500 focus:outline-none focus:ring-1 focus:ring-pink-500" {% if product.stock == 0 %}disabled{% endif %}>
+                                    </label>
+                                    <button type="submit" class="flex-1 rounded-lg bg-pink-600 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-pink-700 focus:outline-none focus:ring-4 focus:ring-pink-300 disabled:cursor-not-allowed disabled:bg-gray-400" {% if product.stock == 0 %}disabled{% endif %}>
+                                        <svg class="mr-1.5 inline-block h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 4h1.5L9 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-8.5-3h9.25L19 7H7.312"/>
+                                        </svg>
+                                        Adicionar
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <a href="{{url_for('products.products')}}" class="inline-flex items-center justify-center h-12 w-fit px-8 md:px-10 rounded-xl border border-[#6B4A45] text-[#6B4A45] hover:bg-[#4B2E2B] hover:text-white transition-colors duration-300">Ver catálogo completo</a>
+    </section>
+    <section class="flex flex-col justify-center items-center py-6 md:py-10 gap-7">
+        <div class="flex flex-col justify-center items-center">
+            <h3 class="text-[#4B2E2B] text-2xl md:text-3xl font-serif font-normal md:font-bold ">Como funciona?</h3>
+            <p class="text-[#6B4A45] text-sm"> 
+                <span class="hidden md:inline">Simples assim: do clique à entrega em <span class="font-semibold">3 passos</span>.</span> 
+                <span class=" inline md:hidden">Entrega em <span class="font-bold">3 passos</span> simples.</span>
+            </p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-y-4 p-3 relative max-w-5xl mx-auto">
+            <!-- A Linha Conectora (visível apenas no Desktop) -->
+            <div class="hidden md:block absolute top-[40px] left-[15%] right-[15%] h-[2px] bg-[#F4DDDD] z-0"></div>
+            <div class="flex flex-row gap-3 z-10 md:flex-col md:justify-center md:items-center ">
+                <div class="flex justify-center items-center bg-[#BE185D] text-white w-10 h-10 md:w-14 md:h-14 rounded-full  ">
+                    1
+                </div>
+                <div class="flex flex-col">
+                    <h4 class="font-normal text-[#4B2E2B] text-base font-serif md:text-center ">Escolha seus doces</h4>
+                    <p class="text-[#6B4A45] text-sm md:text-center">
+                        Navegue pelo catálogo e selecione <span class="inline md:hidden">seus favoritos</span>.
+                    </p>
+                </div>
+            </div>
+            <div class="flex flex-row gap-3 z-10 md:flex-col md:justify-center md:items-center">
+                <div class="flex justify-center items-center bg-[#BE185D] text-white w-10 h-10 md:w-14 md:h-14 rounded-full  ">
+                    2
+                </div>
+                <div class="flex flex-col">
+                    <h4 class="font-normal text-[#4B2E2B] text-base font-serif md:text-center">Adicione ao carrinho</h4>
+                    <p class="text-[#6B4A45] text-sm md:text-center">Revise e finalize com pagamento seguro.</p>
+                </div>
+            </div>
+            <div class="flex flex-row gap-3 z-10 md:flex-col md:justify-center md:items-center"  >
+                <div class="flex justify-center items-center bg-[#BE185D] text-white w-10 h-10 md:w-14 md:h-14 rounded-full  ">
+                    3
+                </div>
+                <div class="flex flex-col">
+                    <h4 class="font-normal text-[#4B2E2B] text-base font-serif md:text-center">Receba em casa</h4>
+                    <p class="text-[#6B4A45] text-sm md:text-center">Acompanhe seu pedido até chegar fresquinho.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="flex flex-col justify-center items-center gap-7 bg-[#4B2E2B] py-10 md:py-16">
+        <div class="flex flex-col justify-center items-center">
+            <h2 class="text-white text-2xl font-bold font-serif ">Sua <span class="hidden md:inline">próxima</span> ocasião <span class="hidden md:inline">especial</span> merece o melhor</h2>
+            <p class="text-[#D4A5A5] text-sm"><span class="hidden md:inline">Cadastre-se gratuitamente e ganhe </span>10% de desconto no primeiro pedido.</p>
+        </div>
+        <div class="flex flex-col justify-center items-center gap-3 w-full px-5 md:flex-row">   
+            {% if not current_user.is_authenticated %}
+                <a href="{{url_for('auth.register')}}" class="flex justify-center items-center font-semibold text-[#FAF7F2] text-base border border-[#E8DED7] w-full max-w-xs h-10 md:h-12 rounded-lg hover:bg-[#2C1A18] hover:text-white hover:scale-105 transition-all duration-300 ">Criar minha conta</a>
+            {% endif %}
+            <a href="{{url_for('products.products')}}" class="flex justify-center items-center font-medium text-[#FAF7F2] text-sm border border-[#E8DED7] w-full max-w-xs h-10 md:h-12 rounded-lg hover:bg-[#2C1A18] hover:text-white hover:scale-105 transition-all duration-300 ">Explorar produtos</a>
+        </div>
+    </section>
 {% endblock %}

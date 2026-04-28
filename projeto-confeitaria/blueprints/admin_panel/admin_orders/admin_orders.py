@@ -11,13 +11,15 @@ admin_orders_bp = Blueprint("admin_orders", __name__, template_folder="templates
 
 @admin_orders_bp.route("/", methods=["GET"])
 def orders():
-    user_id = current_user.id
+    user = current_user
+    order_id = None
     page = request.args.get("page", 1, type=int)
     per_page = 5
 
     base_query = (
         Orders.query
         .options(
+            selectinload(Orders.user),
             selectinload(Orders.items)
                 .selectinload(OrderItems.product)
                 .selectinload(Products.category)
@@ -110,13 +112,28 @@ def orders():
             )
         )
 
+    order_id = request.args.get('id')
+    if order_id:
+        try: 
+            order_id = int(order_id)
+        except ValueError:
+            flash("O ID do pedido deve ser um número" ,"error")
+            return redirect(url_for('admin_panel.dashboard.dashboard'))
+        if order_id < 1:
+            flash("ID de pedido inválido", "error")
+            return redirect(url_for('admin_panel.dashboard.dashboard'))
+        base_query = base_query.filter(Orders.id == order_id)
+
     categories = Categories.query.all()
 
     orders, total, total_pages, page = paginate_query(base_query, page, per_page)
 
+    if order_id and not orders:
+        flash(f"Pedido #{order_id} não encontrado.", "info")
+
     return render_template(
         "admin_orders.html",
-        user_id=user_id,
+        user=user,
         orders=orders,
         page=page,
         total_pages=total_pages,
@@ -135,7 +152,7 @@ def orders():
     )
 
 
-@admin_orders_bp.route("/edit", methods=["POST"])
+@admin_orders_bp.route("/edit", methods=["POST", "GET"])
 def edit_order():
     if request.method == "POST":
         order_id = request.form.get("id", "").strip()

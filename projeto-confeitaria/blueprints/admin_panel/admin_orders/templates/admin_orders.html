@@ -121,11 +121,47 @@
         {% else %}
             {% for order in orders %}
                 <div class="max-w-3xl w-full bg-[#FFF8F8] p-6 border border-[#E6D3D3] rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-0.5 transition">
-                    <div class="flex flex-row justify-between items-center mb-4">
-                        <h3 class="text-lg font-semibold text-[#3F2D2E]">Pedido: {{ (total + 1) - (loop.index + ((page - 1) * per_page)) }}</h3>
-                        <div class="flex flex-col items-center">
-                            <span class="text-sm text-[#6B4B4C]">Status: {{order.status.value}}</span>
-                            <span class="text-sm text-[#6B4B4C]">Pagamento: {{order.payment_status.value}} </span>
+                    <div class="grid grid-cols-[1fr_auto] mb-4">
+                        <div class="flex flex-col items-start">
+                            <h3 class="text-lg font-bold text-[#3F2D2E] flex items-center gap-2"> 
+                                Pedido: {{ (total + 1) - (loop.index + ((page - 1 ) * per_page) )}}
+                                <span class="text-[#D4A5A5] font-normal">|</span>
+                                <span class="font-semibold">{{ order.user.username|capitalize }}</span>
+                            </h3>
+                            <div class="flex items-center gap-3">
+                                <span class="text-base text-[#5F4344]">📱 {{order.user.phone_number}}</span>
+                                <a href="https://wa.me/55{{order.user.phone_number | replace(' ', '') | replace('-', '') | replace('(', '') | replace(')', '')}}?text=Olá, {{user.username|capitalize}}! Tudo bem? Entramos em contato referente ao seu Pedido"
+                                target="_blank" rel="noopener noreferrer"
+                                class="inline-flex items-center gap-1 rounded-full 
+                                bg-green-50 px-3 py-1 text-xs font-semibold text-green-700 
+                                hover:bg-green-100 transition-colors border border-green-200">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/>
+                                    </svg>
+                                    Conversar
+                                </a>
+                            </div>
+                            <details class="group mt-1">
+                                <summary class="text-xs  font-medium text-[#815a5b] hover:text-[#a97c7d] cursor-pointer list-none flex items-center gap-1 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3 h-3 group-open:rotate-180 transition-transform">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                                    </svg>
+                                    Ver E-mail
+                                </summary>
+                                <div class="text-sm mt-1 text-[#6B4B4C] bg-[#FDF4F4] px-2 py-1.5 rounded-md border border-[#F4DDDD] ">
+                                    ✉️ {{order.user.email}}
+                                </div>
+                            </details>
+                        </div>
+                        <div class="flex flex-col items-start justify-start gap-1 p-3 bg-white/50 rounded-xl border border-[#E6D3D3]/50">
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs text-[#a97c7d] uppercase tracking-wide font-semibold">Logística</span>
+                                <span class="text-sm px-2 py-0.5 rounded-full bg-[#eae9dd] font-medium">{{order.status.value}}</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs text-[#a97c7d] uppercase tracking-wide font-semibold" >Dinheiro</span>
+                                <span class="text-sm px-2 py-0.5 rounded-full bg-[#eae9dd] text-[#373831] font-medium">Pagamento: {{order.payment_status.value}} </span>
+                            </div>
                         </div>
                     </div>
                     <div class="grid gap-4">

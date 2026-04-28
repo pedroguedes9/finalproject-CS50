@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -9,7 +10,7 @@
     <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="{{url_for('static', filename='styles/style.css')}}">
 </head>
-<body>
+<body class="flex flex-col min-h-screen">
     <div class="fixed right-6 bottom-6 z-30">
         <a 
         {% if current_user.is_authenticated %} 
@@ -44,7 +45,7 @@
                         </svg>
                     </button>
                     <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
-                        <img src="{{ url_for('static', filename='logos/logo2.png')}}" class="h-7 ml-6 sm:ml-0 scale-200 origin-left" alt="Logo" />
+                        <img src="{{ url_for('static', filename='images/logos/logo2.png')}}" class="h-7 ml-6 sm:ml-0 scale-200 origin-left" alt="Logo" />
                         <span class="hidden sm:block self-center text-xl font-semibold text-pink-900 whitespace-nowrap">Doce império</span>
                     </a>
                 </div>
@@ -89,7 +90,7 @@
                         <div>
                             {% if current_user.is_admin %}
                                 <li>
-                                    <a href="{{ url_for('admin_panel.admin_products.products')}}" class="text-pink-900 hover:underline">Painel Admin</a>
+                                    <a href="{{ url_for('admin_panel.dashboard.dashboard')}}" class="text-pink-900 hover:underline">Painel Admin</a>
                                 </li>
                             {% endif %}
                         </div>
@@ -138,7 +139,7 @@
                     <div>
                         {% if current_user.is_admin %}
                             <li>
-                                <a href="{{ url_for('admin_panel.admin_products.products')}}" class="text-[#4B2E2B] text-lg shadow-sm px-5 py-3 block w-full text-left rounded-md font-medium hover:bg-[#F4DDDD]">Painel Admin</a>
+                                <a href="{{ url_for('admin_panel.dashboard.dashboard')}}" class="text-[#4B2E2B] text-lg shadow-sm px-5 py-3 block w-full text-left rounded-md font-medium hover:bg-[#F4DDDD]">Painel Admin</a>
                             </li>
                         {% endif %}
                     </div>
@@ -148,9 +149,52 @@
         </nav>
     </header>
     {% include "_messages.html" %}
-    <main>
+    <main class="flex-1 bg-[#FAF7F2]">
         {%block main%} {%endblock%}
     </main>
+    <footer class="bg-[#2C1A18] px-5 py-8 md:px-10 z-40">
+        <div class="max-w-7xl mx-auto">
+            <!-- O container principal começa como 1 coluna (mobile) e vira 5 colunas no desktop -->
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-8 border-b border-b-gray-600 pb-8">
+                
+                <!-- Logo e Descrição (No desktop vai ocupar 2 colunas, ou seja, 40%) -->
+                <div class="md:col-span-2">
+                    <h3 class="text-white text-xl font-serif">Doce Império</h3>
+                    <p class="text-[#6B4A45] text-sm mt-3 max-w-sm">
+                        Confeitaria artesanal feita com amor, ingredientes selecionados e muita tradição.
+                    </p>
+                </div>
+                
+                <!-- A partir daqui, cada div ocupará 1 coluna no Desktop. Ocultei no mobile como você fez no original -->
+                <div class="hidden md:flex flex-col gap-2">
+                    <h4 class="text-[#6B4A45] text-sm font-mono tracking-widest mb-2">NAVEGAÇÃO</h4>
+                    <a href="{{url_for('index')}}" class="text-gray-500 hover:text-white text-sm transition">Início</a>
+                    <a href="{{url_for('products.products')}}" class="text-gray-500 hover:text-white text-sm transition">Produtos</a>
+                    <a href="{{url_for('cart.cart')}}" class="text-gray-500 hover:text-white text-sm transition">Carrinho</a>
+                    <a href="{{url_for('admin_panel.admin_products.products')}}" class="text-gray-500 hover:text-white text-sm transition">Painel Admin</a>
+                </div>
+
+                <div class="hidden md:flex flex-col gap-2">
+                    <h4 class="text-[#6B4A45] text-sm font-mono tracking-widest mb-2">CONTA</h4>
+                    <a href="{{url_for('auth.register')}}" class="text-gray-500 hover:text-white text-sm transition">Registrar</a>
+                    <a href="{{url_for('auth.login')}}" class="text-gray-500 hover:text-white text-sm transition">Login</a>
+                    <a href="{{url_for('orders.orders')}}" class="text-gray-500 hover:text-white text-sm transition">Meus pedidos</a>
+                    <a href="{{url_for('auth.profile')}}" class="text-gray-500 hover:text-white text-sm transition">Perfil</a>
+                </div>
+
+                <div class="hidden md:flex flex-col gap-2">
+                    <h4 class="text-[#6B4A45] text-sm font-mono tracking-widest mb-2">CONTATO</h4>
+                    <p class="text-gray-500 text-sm">(82) 8709-7949</p>
+                    <p class="text-gray-500 text-sm">pedro.guedes.mcz@gmail.com</p>
+                    <p class="text-gray-500 text-sm">Maceió, AL</p>
+                </div>
+            </div>
+            
+            <p class="text-gray-600 text-center text-sm mt-6">
+                ©2026 Doce Império - Todos os direitos reservados
+            </p>
+        </div>
+    </footer>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.js"></script>
 <script src="{{url_for('static', filename='js/decimal_validator.js')}}"></script>

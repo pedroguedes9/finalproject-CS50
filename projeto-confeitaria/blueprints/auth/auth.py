@@ -61,7 +61,7 @@ def register():
         
         
 
-        login_user(new_user)
+        login_user(new_user, remember=True)
         flash("Conta criada com sucesso. Bem-vindo!", "success" )
         return redirect(url_for('index'))
     else:
@@ -91,7 +91,7 @@ def login():
             flash("Email ou senha incorretos", "error")
             return redirect(url_for('auth.login'))
 
-        login_user(user)
+        login_user(user, remember=True)
         flash("Login realizado com sucesso. Bem-vindo de volta!", "success" )
         return redirect(url_for('index'))
     else:

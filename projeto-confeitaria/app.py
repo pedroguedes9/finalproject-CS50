@@ -4,6 +4,7 @@ from flask import Flask, render_template, Blueprint, flash, url_for, redirect, r
 from flask_login import LoginManager, current_user
 from flask_wtf.csrf import CSRFProtect
 from flask_migrate import Migrate
+from werkzeug.exceptions import RequestEntityTooLarge
 from db import db
 from models import Users, Products
 from blueprints.cart.cart import cart_bp
@@ -55,6 +56,11 @@ app.register_blueprint(admin_bp, url_prefix="/admin")
 
 
 csrf = CSRFProtect(app)
+
+@app.errorhandler(RequestEntityTooLarge)
+def handle_request_entity_too_large(e):
+    flash("Arquivo muito grande. O limite atual é 2MB. Envie uma imagem menor ou comprima antes de enviar.", "error")
+    return redirect(request.referrer or url_for('index'))
 
 @app.context_processor
 def inject_url_for_page():

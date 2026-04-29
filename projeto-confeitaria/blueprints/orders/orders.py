@@ -48,7 +48,7 @@ def checkout():
         db.session.add(new_ordered_item)
         db.session.delete(item)
     db.session.commit()
-    return redirect(url_for("cart.cart"))
+    return redirect(url_for("orders.orders"))
 
 @orders_bp.route("/", methods=[ "GET"])
 @login_required

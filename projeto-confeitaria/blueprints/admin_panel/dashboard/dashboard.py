@@ -74,7 +74,7 @@ def dashboard():
         new_users_variation = new_users * 100
 
     unavailable_products = Products.query.filter_by(is_active=False).count()
-    pendent_payments = Orders.query.filter_by(payment_status="pendent").count()
+    pendent_payments = Orders.query.filter_by(payment_status="pendente").count()
     low_stock_products = Products.query.filter(Products.stock < 2).count()
 
     return render_template(

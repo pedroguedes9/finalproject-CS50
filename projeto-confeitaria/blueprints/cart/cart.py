@@ -85,7 +85,7 @@ def cart():
         .options(selectinload(CartItems.product))
         .all()
     )
-    total_price = sum(Decimal(item.product.price) * Decimal(item.quantity) for item in cart_items)
+    total_price = sum(Decimal(item.product.price) * Decimal(item.quantity) for item in all_items)
 
     return render_template(
         "cart.html", 

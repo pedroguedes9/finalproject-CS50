@@ -5,7 +5,7 @@
     {% if not products %}
         <p class="mt-6 mx-auto max-w-md rounded-xl border border-[#D4A5A5] bg-[#FDF4F4] px-5 py-4 text-center text-[#5F4344] font-medium shadow-sm">Não há nenhum produto criado ainda.</p>
     {% else %}
-        <div class="grid grid-cols-1 xl:grid-cols-3 gap-y-5 xl:gap-x-4 max-w-10xl justify-items-center mt-5 mb-5">
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-y-5 xl:gap-x-4 max-w-10xl justify-items-center mt-5 mb-5 px-4">
             {% for product in products %}
                 <div class="group relative w-full max-w-sm overflow-hidden rounded-lg border border-gray-200 bg-white shadow-md transition-transform duration-300 hover:-translate-y-2 hover:shadow-xl">
                     <a href="#" class="block h-64 w-full overflow-hidden">

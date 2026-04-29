@@ -101,7 +101,7 @@ def create_product():
 
         if image and image.filename != "":
             if not allowed_file(image.filename):
-                flash("Apenas arquivos JPG ou JPEG são permitidos.", "error")
+                flash("Apenas arquivos JPG, WEBP ou JPEG são permitidos.", "error")
                 return redirect(url_for('.create_product'))
             
             #verifica tamanho do arquivo

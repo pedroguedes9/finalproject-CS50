@@ -30,7 +30,7 @@
         <p>Não há nenhuma categoria criada ainda.</p>
     {% else %}
         <h2 class="font-semibold text-2xl text-center">Categorias</h2>
-        <div class="grid grid-cols-1 xl:grid-cols-3 gap-5 mx-auto justify-items-center mt-8">
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-5 mx-auto justify-items-center mt-8 px-4">
             {% for category in categories %}
                 {% if category.name != "sem categoria" %}
                     <div class="w-full max-w-md rounded-2xl border border-[#E6D3D3] bg-[#FFF8F8] p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition">

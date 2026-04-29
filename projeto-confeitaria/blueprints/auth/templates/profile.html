@@ -5,7 +5,7 @@
         <h1 class="text-center font-bold font-serif text-3xl">Perfil</h1>
         <form action="{{url_for('auth.profile')}}" method="post">
             <div class="flex flex-col items-center ">
-                <div class=" w-full max-w-md ">
+                <div class=" w-full max-w-md px-4 ">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="mb-6">
                         <label for="new-username" class="block mb-2.5 text-sm font-medium font-serif text-[#373831]"><span class="font-semibold">Nome</label>

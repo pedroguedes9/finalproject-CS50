@@ -39,7 +39,7 @@
                     {% endif %}
                     {{"%.2f"|format(orders_in_period_variation|abs) | replace(".", ",")}}%
                     <span class="hidden md:inline ps-1 text-gray-500">
-                        vs. {{period}} dias anteriores
+                        vs. {{actual_period}} dias anteriores
                     </span>
                 </p>
             </div>
@@ -64,7 +64,7 @@
                     {% endif %}
                     {{"%.2f"|format(total_invoicing_variation|abs) | replace(".", ",")}}% 
                     <span class="hidden md:inline ps-1 text-gray-500">
-                        vs. {{period}} dias anteriores
+                        vs. {{actual_period}} dias anteriores
                     </span>
                 </p>
             </div>
@@ -89,7 +89,7 @@
                     {% endif %}
                     {{"%.2f"|format(medium_ticket_variation|abs) | replace(".", ",")}}%
                     <span class="hidden md:inline ps-1 text-gray-500"> 
-                        vs. {{period}} dias anteriores
+                        vs. {{actual_period}} dias anteriores
                     </span>
                 </p>
             </div>
@@ -114,7 +114,7 @@
                     {% endif %}
                     {{"%.2f"|format(new_users_variation|abs) | replace(".", ",")}}%
                     <span class="hidden md:inline ps-1 text-gray-500"> 
-                        vs. {{period}} dias anteriores
+                        vs. {{actual_period}} dias anteriores
                     </span>
                 </p>
             </div>

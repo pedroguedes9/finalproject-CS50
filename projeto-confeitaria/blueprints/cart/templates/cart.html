@@ -23,7 +23,7 @@
                                     <span class="text-2xl font-bold text-gray-900">R${{item.product.price * item.quantity}}</span>
                                 </div>
                                 <p class="mt-3 text-sm text-gray-600 first-letter:uppercase">{{item.product.description}}</p>
-                                <div class="mt-4 flex flex-wrap items-center justify-between self-end gap-4">
+                                <div class="mt-4 flex flex-wrap items-center justify-between gap-4">
                                     <div class="flex items-center gap-3">
                                         <form action="{{url_for('cart.decrease_quantity')}}" method="post">
                                             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">

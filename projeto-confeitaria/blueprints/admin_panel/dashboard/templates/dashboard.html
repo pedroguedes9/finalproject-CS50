@@ -38,7 +38,9 @@
                         </svg>
                     {% endif %}
                     {{"%.2f"|format(orders_in_period_variation|abs) | replace(".", ",")}}%
-                    <span class="hidden md:inline ps-1 text-gray-500"> vs. semana anterior</span>
+                    <span class="hidden md:inline ps-1 text-gray-500">
+                        vs. {{period}} dias anteriores
+                    </span>
                 </p>
             </div>
             <div class="bg-white border border-[#D4A5A5] border-l-4 border-l-[#815a5b] rounded-lg w-full p-4 shadow-sm hover:-translate-y-1 hover:shadow-md transition-all duration-300">
@@ -61,7 +63,9 @@
                         </svg>
                     {% endif %}
                     {{"%.2f"|format(total_invoicing_variation|abs) | replace(".", ",")}}% 
-                    <span class="hidden md:inline ps-1 text-gray-500"> vs. semana anterior</span>
+                    <span class="hidden md:inline ps-1 text-gray-500">
+                        vs. {{period}} dias anteriores
+                    </span>
                 </p>
             </div>
             <div class="bg-white border border-[#D4A5A5] border-l-4 border-l-[#815a5b] rounded-lg w-full p-4 shadow-sm hover:-translate-y-1 hover:shadow-md transition-all duration-300"> 
@@ -84,7 +88,9 @@
                         </svg>
                     {% endif %}
                     {{"%.2f"|format(medium_ticket_variation|abs) | replace(".", ",")}}%
-                    <span class="hidden md:inline ps-1 text-gray-500"> vs. semana anterior</span>
+                    <span class="hidden md:inline ps-1 text-gray-500"> 
+                        vs. {{period}} dias anteriores
+                    </span>
                 </p>
             </div>
             <div class="bg-white border border-[#D4A5A5] border-l-4 border-l-[#815a5b] rounded-lg w-full p-4 shadow-sm hover:-translate-y-1 hover:shadow-md transition-all duration-300">
@@ -107,7 +113,9 @@
                         </svg>
                     {% endif %}
                     {{"%.2f"|format(new_users_variation|abs) | replace(".", ",")}}%
-                    <span class="hidden md:inline ps-1 text-gray-500"> vs. semana anterior</span>
+                    <span class="hidden md:inline ps-1 text-gray-500"> 
+                        vs. {{period}} dias anteriores
+                    </span>
                 </p>
             </div>
         </div>

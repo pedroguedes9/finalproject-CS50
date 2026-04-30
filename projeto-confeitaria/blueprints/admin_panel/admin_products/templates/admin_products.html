@@ -2,8 +2,72 @@
 {% block title%}Administrar produtos{%endblock%}
 {% block main %}
     <h1 class="text-center font-bold font-serif text-3xl mt-3">Produtos</h1>
+    <form id="filter-form" action="{{ url_for('admin_panel.admin_products.products')}}" method="get" class="flex flex-wrap gap-4 items-center mb-4 mt-4 justify-center ">
+        <details class="group relative">
+            <summary class="flex items-center gap-2 px-4 py-2.5 bg-[#eae9dd] border-none rounded-lg text-[#373831] font-serif font-medium transition-colors hover:bg-[#dcdbce] cursor-pointer list-none [&::-webkit-details-marker]:hidden shadow-sm focus:ring-2 focus:ring-[#f7c5c5] focus:outline-none">
+                <span class="text-sm"> Preço </span>
+                <span class="transition-transform group-open:-rotate-180">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"></path></svg>
+                </span>
+            </summary>
+            <div class="z-50 w-64 divide-y divide-[#f7c5c5] rounded-xl border border-[#eae9dd] bg-[#eae9dd] shadow-lg absolute start-0 top-14">
+                <div class="flex items-center justify-between px-3 py-2 border-b border-[#f7c5c5]">
+                    <span class="text-sm font-medium font-serif text-[#373831]">Filtrar valor</span>
+                    <button type="button" onclick="document.getElementById('min-price').value=''; document.getElementById('max-price').value=''; document.getElementById('filter-form').submit();" class="text-sm font-serif text-[#815a5b] underline transition-colors hover:text-[#a97c7d]">
+                        Limpar
+                    </button>
+                </div>
+                <div class="flex items-center gap-3 p-3">
+                    <label for="min-price" class="w-full">
+                        <span class="text-xs font-medium font-serif text-[#373831] mb-1 block"> Mínimo </span>
+                        <input type="text" id="min-price" name="min-price" inputmode="decimal" placeholder="R$ 0,00" min="0" step="0.01"
+                        {% if min_price_val is not none %}value="{{min_price_val}}"{% endif %}
+                        class="only-numbers w-full bg-white text-pink-900 text-sm rounded-lg focus:ring-2 focus:ring-[#f7c5c5] block px-3 py-2 shadow-sm placeholder:text-gray-400 border-none">
+                    </label>
+                    <label for="max-price" class="w-full">
+                        <span class="text-xs font-medium font-serif text-[#373831] mb-1 block"> Máximo </span>
+                        <input type="text" id="max-price" name="max-price" inputmode="decimal" placeholder="R$ 0,00" min="0" step="0.01"
+                        {% if max_price_val is not none %}value="{{max_price_val}}"{% endif %}
+                        class="only-numbers w-full bg-white text-pink-900 text-sm rounded-lg focus:ring-2 focus:ring-[#f7c5c5] block px-3 py-2 shadow-sm placeholder:text-gray-400 border-none">
+                    </label>
+                </div>
+            </div>
+        </details>
+
+        <details class="group relative">
+            <summary class="flex items-center gap-2 px-4 py-2.5 bg-[#eae9dd] border-none rounded-lg text-[#373831] font-serif font-medium transition-colors hover:bg-[#dcdbce] cursor-pointer list-none [&::-webkit-details-marker]:hidden shadow-sm focus:ring-2 focus:ring-[#f7c5c5] focus:outline-none">
+                <span class="text-sm"> Categorias </span>
+                <span class="transition-transform group-open:-rotate-180">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"></path></svg>
+                </span>
+            </summary>
+            <div class="z-50 w-48 divide-y divide-[#f7c5c5] rounded-xl border border-[#eae9dd] bg-[#eae9dd] shadow-lg absolute start-0 top-14">
+                <fieldset class="p-3"> 
+                    <div class="flex flex-col gap-2">
+                        <label class="flex items-center gap-2 text-sm font-medium font-serif text-[#373831] cursor-pointer hover:text-pink-900">
+                            <input type="radio" name="category-name" value="" class="size-4 text-[#815a5b] focus:ring-[#f7c5c5] bg-white border-gray-300" {% if not current_category_name %}checked{% endif %}> 
+                            <span>Todas</span>
+                        </label>
+                        {% for category in categories %}
+                            <label class="flex items-center gap-2 text-sm font-medium font-serif text-[#373831] cursor-pointer hover:text-pink-900">
+                                <input type="radio" name="category-name" value="{{ category.name }}" class="size-4 text-[#815a5b] focus:ring-[#f7c5c5] bg-white border-gray-300" {% if category.name == current_category_name %}checked{% endif %}>
+                                {{ category.name }}
+                            </label>
+                        {% endfor %}
+                    </div>
+                </fieldset>
+            </div>  
+        </details>
+
+        <input type="text" placeholder="Nome do produto" name="product-name"
+        {% if product_name %}value="{{product_name}}"{% endif %}
+        class="bg-[#eae9dd] text-[#373831] font-serif font-medium text-sm rounded-lg focus:ring-2 focus:ring-[#f7c5c5] focus:outline-none block px-4 py-2.5 shadow-sm placeholder:text-[#373831]/60 border-none">
+
+        <!-- Botão oculto, pois o evento 'change' ou 'Enter' submeterão o form -->
+        <button type="submit" class="hidden">Enviar</button>
+    </form>
     {% if not products %}
-        <p class="mt-6 mx-auto max-w-md rounded-xl border border-[#D4A5A5] bg-[#FDF4F4] px-5 py-4 text-center text-[#5F4344] font-medium shadow-sm">Não há nenhum produto criado ainda.</p>
+        <p class="mt-6 mx-auto max-w-md rounded-xl border border-[#D4A5A5] bg-[#FDF4F4] px-5 py-4 text-center text-[#5F4344] font-medium shadow-sm">Nenhum produto foi encontrado..</p>
     {% else %}
         <div class="grid grid-cols-1 gap-y-3 justify-items-center mt-5 mb-5 px-4">
             {% for product in products %}
@@ -98,4 +162,11 @@
         </div>
     {% endif %} 
     {% include "_pagination.html" %}
+    <script>
+        const form = document.getElementById('filter-form')
+
+        form.addEventListener('change', function(event) {
+            form.submit()
+        })
+    </script>
 {% endblock %}

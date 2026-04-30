@@ -155,7 +155,7 @@ def create_product():
 
         image = request.files.get("image")
         image_path = None
-        upload_folder = os.path.join(os.path.dirname(__file__), '..', '..', 'static', 'uploads')
+        upload_folder = os.path.join(os.path.dirname(__file__), '..', '..', '..','static', 'uploads')
         upload_folder = os.path.abspath(upload_folder)
         if not os.path.exists(upload_folder):
             os.makedirs(upload_folder)

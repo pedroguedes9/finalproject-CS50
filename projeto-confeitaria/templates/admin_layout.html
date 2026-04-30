@@ -13,7 +13,7 @@
 
     <div class="drawer lg:drawer-open">
         <input id="my-drawer-4" type="checkbox" class="drawer-toggle" />
-        <div class="drawer-content">
+        <div class="drawer-content flex flex-col min-h-dvh bg-[#F8F5F0]">
             <!-- Navbar -->
             <header>
                 <nav class="navbar w-full bg-[#D4A5A5]/80 backdrop-blur-md shadow-xl shadow-[#815a5b]/10" >
@@ -28,7 +28,7 @@
                 </nav>
             </header>
             {% include "_messages.html" %}
-            <main class="bg-[#F8F5F0] h-dvh">
+            <main class="bg-[#F8F5F0] flex-1 ">
                 {% block main %} {% endblock %}
             </main>
         </div>

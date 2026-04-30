@@ -19,7 +19,7 @@ def allowed_file(filename):
 @admin_products_bp.route("/", methods = ["GET"])
 def products():
     page = request.args.get("page", 1, type=int)
-    per_page = 7
+    per_page = 5
 
     base_query = products = (
         Products.query

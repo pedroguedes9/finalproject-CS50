@@ -1,3 +1,4 @@
 instance/*.db
 instance/
 __pycache__/
+*.db

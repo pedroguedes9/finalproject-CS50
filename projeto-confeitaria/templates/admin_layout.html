@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{%block title%} {%endblock%}</title>
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logos/logo2.png')}}">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
@@ -23,8 +22,8 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round" stroke-width="2" fill="none" stroke="currentColor" class="my-1.5 inline-block size-4"><path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"></path><path d="M9 4v16"></path><path d="M14 10l2 2l-2 2"></path></svg>
                     </label>
                     <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
-                        <img src="{{ url_for('static', filename='images/logos/logo2.png')}}" class="ml-6 origin-left h-7 sm:ml-0 scale-200" alt="Logo" />
-                        <span class="self-center text-xl font-semibold text-pink-900  whitespace-nowrap">Doce império Admin</span>
+                        <img src="{{ url_for('static', filename='images/logos/logo2.png')}}" class="h-7 ml-6 sm:ml-0 scale-200 origin-left" alt="Logo" />
+                        <span class=" self-center text-xl font-semibold text-pink-900 whitespace-nowrap">Doce império Admin</span>
                     </a>
                 </nav>
             </header>
@@ -38,7 +37,7 @@
             <label for="my-drawer-4" aria-label="close sidebar" class="drawer-overlay"></label>
             <aside class="pt-3 flex min-h-full flex-col items-start bg-[#FAF7F2] border-r border-[#E8DED7] transition-all duration-300 is-drawer-close:w-14" style="width: 200px;" >
                 <!-- Sidebar content here -->
-                <ul class="flex flex-col w-full gap-2  grow">
+                <ul class=" w-full grow flex flex-col gap-2">
                     <!-- List item -->
                     <div class="flex flex-col flex-1 gap-1">
                         <li class="w-full">
@@ -46,7 +45,7 @@
                             class="text-[#4B2E2B] text-[15px] shadow-sm px-3 py-2.5 w-full rounded-md font-medium
                             hover:bg-[#F4DDDD] flex items-center gap-3 transition-colors">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linejoin="round" stroke-linecap="round" stroke-width="2" fill="none" stroke="currentColor" class="size-5 shrink-0"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"></path><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
-                                <span class="w-full is-drawer-close:hidden">Dashboard</span>
+                                <span class="is-drawer-close:hidden w-full">Dashboard</span>
                             </a>
                         </li>
                         <li>

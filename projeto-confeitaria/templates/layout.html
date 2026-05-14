@@ -5,13 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{%block title%} {%endblock%}</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logos/logo2.png')}}">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="{{url_for('static', filename='styles/style.css')}}">
 </head>
 <body class="flex flex-col min-h-screen">
-    <div class="fixed right-6 bottom-6 z-30">
+    <div class="fixed z-30 right-6 bottom-6">
         <a 
         {% if current_user.is_authenticated %} 
             href="https://wa.me/5582987097949?text=Olá, sou o {{current_user.username|capitalize}}, %20gostaria%20de%20tirar%20uma%20dúvida!" 
@@ -19,19 +20,19 @@
             href="https://wa.me/5582987097949?text=Olá,%20gostaria%20de%20tirar%20uma%20dúvida!"
         {% endif %}
         target="_blank" 
-        class="whatsapp-float group flex items-center"
+        class="flex items-center whatsapp-float group"
         rel="noopener noreferrer">
             <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
             </svg>
-            <span class="max-w-0 overflow-hidden whitespace-nowrap group-hover:max-w-xs group-hover:ml-2 transition-all duration-500 font-medium text-sm">
+            <span class="overflow-hidden text-sm font-medium transition-all duration-500 max-w-0 whitespace-nowrap group-hover:max-w-xs group-hover:ml-2">
                 Falar com a gente
             </span>
         </a>
     </div>
     <header class="sticky top-0 z-40 w-full inset-s-0">
         <nav class="bg-[#D4A5A5]/80 backdrop-blur-md shadow-xl shadow-[#815a5b]/10">
-            <div class="flex flex-wrap items-center justify-between max-w-7xl p-4 mx-auto">
+            <div class="flex flex-wrap items-center justify-between p-4 mx-auto max-w-7xl">
                 <div class="flex flex-row ">
                     <button 
                         class="block sm:hidden" 
@@ -45,16 +46,16 @@
                         </svg>
                     </button>
                     <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
-                        <img src="{{ url_for('static', filename='images/logos/logo2.png')}}" class="h-7 ml-6 sm:ml-0 scale-200 origin-left" alt="Logo" />
-                        <span class="hidden sm:block self-center text-xl font-semibold text-pink-900 whitespace-nowrap">Doce império</span>
+                        <img src="{{ url_for('static', filename='images/logos/logo2.png')}}" class="ml-6 origin-left h-7 sm:ml-0 scale-200" alt="Logo" />
+                        <span class="self-center hidden text-xl font-semibold text-pink-900 sm:block whitespace-nowrap">Doce império</span>
                     </a>
                 </div>
                 <div class="flex items-center space-x-6">
-                    <div class=" flex items-center space-x-6 rtl:space-x-reverse">
+                    <div class="flex items-center space-x-6 rtl:space-x-reverse">
                         {% if current_user.is_authenticated %}
-                            <a href="tel:5541251234" class="hidden sm:inline text-sm text-gray-700 hover:underline">{{current_user.phone_number}}</a>
+                            <a href="tel:5541251234" class="hidden text-sm text-gray-700 sm:inline hover:underline">{{current_user.phone_number}}</a>
                             <a href="{{url_for('auth.profile')}}" class="text-sm font-medium text-pink-700 hover:underline">Perfil</a>
-                            <a href="{{url_for('cart.cart')}}" class="text-sm font-medium text-pink-700 hover:underline relative">
+                            <a href="{{url_for('cart.cart')}}" class="relative text-sm font-medium text-pink-700 hover:underline">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
                                 </svg>
@@ -73,7 +74,7 @@
             </div>
         </nav>
         <nav class="bg-[#FAF7F2] ">
-            <div class=" hidden sm:block max-w-7xl px-4 py-3 mx-auto ">
+            <div class="hidden px-4 py-3 mx-auto sm:block max-w-7xl">
                 <div class="flex items-center">
                     <ul class="flex flex-row justify-between w-full gap-8 mt-0 text-sm font-medium rtl:space-x-reverse">
                         <div class="flex gap-8">
@@ -121,8 +122,8 @@
                             </svg>
                     </button>
                 </div>
-                <ul class="flex flex-col flex-1 justify-between items-stretch gap-1">
-                    <div class="flex-col gap-1 flex flex-1">
+                <ul class="flex flex-col items-stretch justify-between flex-1 gap-1">
+                    <div class="flex flex-col flex-1 gap-1">
                         <li>
                             <a href="{{ url_for('index')}}"
                             class="text-[#4B2E2B] text-lg shadow-sm px-5 py-3 block w-full text-left rounded-md font-medium  hover:bg-[#F4DDDD] "
@@ -153,44 +154,44 @@
         {%block main%} {%endblock%}
     </main>
     <footer class="bg-[#2C1A18] px-5 py-8 md:px-10 z-30">
-        <div class="max-w-7xl mx-auto">
+        <div class="mx-auto max-w-7xl">
             <!-- O container principal começa como 1 coluna (mobile) e vira 5 colunas no desktop -->
-            <div class="grid grid-cols-1 md:grid-cols-5 gap-8 border-b border-b-gray-600 pb-8">
+            <div class="grid grid-cols-1 gap-8 pb-8 border-b md:grid-cols-5 border-b-gray-600">
                 
                 <!-- Logo e Descrição (No desktop vai ocupar 2 colunas, ou seja, 40%) -->
                 <div class="md:col-span-2">
-                    <h3 class="text-white text-xl font-serif">Doce Império</h3>
+                    <h3 class="font-serif text-xl text-white">Doce Império</h3>
                     <p class="text-[#6B4A45] text-sm mt-3 max-w-sm">
                         Confeitaria artesanal feita com amor, ingredientes selecionados e muita tradição.
                     </p>
                 </div>
                 
                 <!-- A partir daqui, cada div ocupará 1 coluna no Desktop. Ocultei no mobile como você fez no original -->
-                <div class="hidden md:flex flex-col gap-2">
+                <div class="flex-col hidden gap-2 md:flex">
                     <h4 class="text-[#6B4A45] text-sm font-mono tracking-widest mb-2">NAVEGAÇÃO</h4>
-                    <a href="{{url_for('index')}}" class="text-gray-500 hover:text-white text-sm transition">Início</a>
-                    <a href="{{url_for('products.products')}}" class="text-gray-500 hover:text-white text-sm transition">Produtos</a>
-                    <a href="{{url_for('cart.cart')}}" class="text-gray-500 hover:text-white text-sm transition">Carrinho</a>
-                    <a href="{{url_for('admin_panel.admin_products.products')}}" class="text-gray-500 hover:text-white text-sm transition">Painel Admin</a>
+                    <a href="{{url_for('index')}}" class="text-sm text-gray-500 transition hover:text-white">Início</a>
+                    <a href="{{url_for('products.products')}}" class="text-sm text-gray-500 transition hover:text-white">Produtos</a>
+                    <a href="{{url_for('cart.cart')}}" class="text-sm text-gray-500 transition hover:text-white">Carrinho</a>
+                    <a href="{{url_for('admin_panel.admin_products.products')}}" class="text-sm text-gray-500 transition hover:text-white">Painel Admin</a>
                 </div>
 
-                <div class="hidden md:flex flex-col gap-2">
+                <div class="flex-col hidden gap-2 md:flex">
                     <h4 class="text-[#6B4A45] text-sm font-mono tracking-widest mb-2">CONTA</h4>
-                    <a href="{{url_for('auth.register')}}" class="text-gray-500 hover:text-white text-sm transition">Registrar</a>
-                    <a href="{{url_for('auth.login')}}" class="text-gray-500 hover:text-white text-sm transition">Login</a>
-                    <a href="{{url_for('orders.orders')}}" class="text-gray-500 hover:text-white text-sm transition">Meus pedidos</a>
-                    <a href="{{url_for('auth.profile')}}" class="text-gray-500 hover:text-white text-sm transition">Perfil</a>
+                    <a href="{{url_for('auth.register')}}" class="text-sm text-gray-500 transition hover:text-white">Registrar</a>
+                    <a href="{{url_for('auth.login')}}" class="text-sm text-gray-500 transition hover:text-white">Login</a>
+                    <a href="{{url_for('orders.orders')}}" class="text-sm text-gray-500 transition hover:text-white">Meus pedidos</a>
+                    <a href="{{url_for('auth.profile')}}" class="text-sm text-gray-500 transition hover:text-white">Perfil</a>
                 </div>
 
-                <div class="hidden md:flex flex-col gap-2">
+                <div class="flex-col hidden gap-2 md:flex">
                     <h4 class="text-[#6B4A45] text-sm font-mono tracking-widest mb-2">CONTATO</h4>
-                    <p class="text-gray-500 text-sm">(82) 8709-7949</p>
-                    <p class="text-gray-500 text-sm">pedro.guedes.mcz@gmail.com</p>
-                    <p class="text-gray-500 text-sm">Maceió, AL</p>
+                    <p class="text-sm text-gray-500">(82) 8709-7949</p>
+                    <p class="text-sm text-gray-500">pedro.guedes.mcz@gmail.com</p>
+                    <p class="text-sm text-gray-500">Maceió, AL</p>
                 </div>
             </div>
             
-            <p class="text-gray-600 text-center text-sm mt-6">
+            <p class="mt-6 text-sm text-center text-gray-600">
                 ©2026 Doce Império - Todos os direitos reservados
             </p>
         </div>
